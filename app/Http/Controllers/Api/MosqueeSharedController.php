@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Models\Mosquee_shared;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\MosqueeResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Mosquee_sharedResource;
@@ -19,7 +20,7 @@ class MosqueeSharedController extends Controller
 
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
-            // 'user_id' => Auth::check() ?? '',
+            'user_id' => 'required',
             'ip_address' => 'required',
         ]); 
 
@@ -27,7 +28,10 @@ class MosqueeSharedController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $mosquee_shared = Mosquee_shared::create($request->all());
+        $mosquee_shared = Mosquee_shared::create([
+            'user_id' => $request->Auth::check() ?? '',
+            'ip_address' => $request->ip()
+        ]);
 
         return new Mosquee_sharedResource(true, 'Successfully', $mosquee_shared);
     }

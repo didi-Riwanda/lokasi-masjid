@@ -10,8 +10,8 @@
     <form action="{{ route('mosquee_shared.store') }}" method="POST">
         @csrf
 
-        <input type="hidden" name="user_id" id="user_id"> {{-- <label for="user_id">User Id</label> --}} 
-        <input type="text" name="ip_address" id="ip_address"> <label for="ip_address">Ip Address</label>
+        {{-- <input type="hidden" name="user_id" id="user_id"> 
+        <input type="hidden" name="ip_address" id="ip_address">  --}}
 
         <button>Save</button>
     </form>

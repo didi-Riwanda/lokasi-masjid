@@ -33,8 +33,8 @@ class MosqueeSharedController extends Controller
     public function store(Request $request)
     {
         Mosquee_shared::create([
-            // 'user_id' => Auth::check() ?? '',
-            'ip_address' => $request->input('ip_address'),
+            'user_id' => Auth::check() ?? '',
+            'ip_address' => $request->ip(),
         ]);
 
         return redirect()->route('mosquee_shareds.index')->with('success', 'Berhasil');
@@ -67,8 +67,8 @@ class MosqueeSharedController extends Controller
     {
 
         $mosquee_shared->update([
-            // 'user_id' => Auth::check() ?? '',
-            'ip_address' => $request->input('ip_address'),
+            'user_id' => Auth::check() ?? '',
+            'ip_address' => $request->ip(),
         ]);
 
         return redirect()->route('mosquee_shareds.index')->with('success', 'Berhasil');

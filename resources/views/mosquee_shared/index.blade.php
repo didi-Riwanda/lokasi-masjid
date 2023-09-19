@@ -11,17 +11,22 @@
         <p>{{ $message }}</p>
     @endif
 
-    <a href="{{ route('mosquee_shared.create') }}">Create</a>
+    {{-- <a href="{{ route('mosquee_shared.create') }}">Create</a> --}}
+    <form action="{{ route('mosquee_shared.store') }}" method="POST">
+        @csrf
+
+        <button>Create</button>
+    </form>
     <ul>
         @foreach ($all_mosquee_shared as $mosquee_shareds)
-            {{-- <li>{{ $mosquee_shareds->user_id }}</li> --}}
+            <li>{{ $mosquee_shareds->user_id }}</li>
             <li>{{ $mosquee_shareds->ip_address }}</li>
 
             <form action="{{ route('mosquee_shared.destroy', $mosquee_shareds->id) }}" method="POST">
                 @csrf
                 @method('DELETE')
 
-                <a href="{{ route('mosquee_shared.edit', $mosquee_shareds->id) }}">Update</a>
+                {{-- <a href="{{ route('mosquee_shared.edit', $mosquee_shareds->id) }}">Update</a> --}}
                 <a href="{{ route('mosquee_shared.show', $mosquee_shareds->id) }}">Detail</a>
                 <button onclick="return confirm('Deleted?')">Delete</button>
             </form>
