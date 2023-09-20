@@ -16,6 +16,9 @@
         <li>{{ $mosquee->province }}</li>
         <li>{{ $mosquee_follower }}</li>
         <li>{{ $mosquee->mosquee_contact->phone }}</li>
+        <li>
+            <img src="{{ asset('storage/' . $mosquee->mosquee_image->source ) }}" alt="{{ $mosquee->name }}" width="100px">
+        </li>
     </ul>
 </body>
 </html>

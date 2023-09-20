@@ -43,6 +43,8 @@
                     <img width="100px" src="{{ asset('storage/' . $mosquees->mosquee_image->source ) }}" >
                 </a>
             </li>
+            <li>{{ $mosquees->latitude }}</li>
+            <li>{{ $mosquees->longtitude }}</li>
             <br><br><br>
         @endforeach
     </ul>
