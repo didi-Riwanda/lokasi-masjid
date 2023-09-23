@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Mosquee;
 use Illuminate\Http\Request;
-use App\Models\Mosquee_contact;
 use App\Http\Controllers\Controller;
+use App\Models\MosqueeContact;
 
 class MosqueeContactController extends Controller
 {
@@ -15,7 +15,7 @@ class MosqueeContactController extends Controller
     public function index()
     {
         return view('mosquee_contact.index', [
-            'all_mosquee_contact' => Mosquee_contact::all()
+            'all_mosquee_contact' => MosqueeContact::all()
         ]);
     }
 
@@ -34,7 +34,7 @@ class MosqueeContactController extends Controller
      */
     public function store(Request $request)
     {
-        Mosquee_contact::create([
+        MosqueeContact::create([
             'mosquee_id' => $request->input('mosquee_id'),
             'name' => $request->input('name'),
             'phone' => $request->input('phone'),
@@ -47,7 +47,7 @@ class MosqueeContactController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Mosquee_contact $mosquee_contact)
+    public function show(MosqueeContact $mosquee_contact)
     {
         return view('mosquee_contact.show', [
             'mosquee_contact' => $mosquee_contact
@@ -57,7 +57,7 @@ class MosqueeContactController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Mosquee_contact $mosquee_contact)
+    public function edit(MosqueeContact $mosquee_contact)
     {
         return view('mosquee_contact.edit', [
             'old_mosquee_contact' => $mosquee_contact,
@@ -68,7 +68,7 @@ class MosqueeContactController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Mosquee_contact $mosquee_contact)
+    public function update(Request $request, MosqueeContact $mosquee_contact)
     {
         $validate = $request->validate([
             'mosquee_id' => 'required',
@@ -85,7 +85,7 @@ class MosqueeContactController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Mosquee_contact $mosquee_contact)
+    public function destroy(MosqueeContact $mosquee_contact)
     {
         $mosquee_contact->delete();
 

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Mosquee;
-use App\Models\Mosquee_image;
+use App\Models\MosqueeImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,7 +16,7 @@ class MosqueeImageController extends Controller
     public function index()
     {
         return view('mosquee_images.index', [
-            'all_mosquee_images' => Mosquee_image::all()
+            'all_mosquee_images' => MosqueeImage::all()
         ]);
     }
 
@@ -25,7 +25,7 @@ class MosqueeImageController extends Controller
      */
     public function create()
     {
-        return view('mosquee_images.create', [ 
+        return view('mosquee_images.create', [
             'mosquee' => Mosquee::all()
         ]);
     }
@@ -44,8 +44,8 @@ class MosqueeImageController extends Controller
         if($request->file('source')){
             $validateData['source'] = $request->file('source')->store('mosquee_images');
         }
-        
-        Mosquee_image::create($validateData);
+
+        MosqueeImage::create($validateData);
 
         return redirect()->route('mosquee_images.index')->with('success', 'Successfully');
     }
@@ -53,7 +53,7 @@ class MosqueeImageController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Mosquee_image $mosquee_image)
+    public function show(MosqueeImage $mosquee_image)
     {
         //
     }
@@ -61,7 +61,7 @@ class MosqueeImageController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Mosquee_image $mosquee_image)
+    public function edit(MosqueeImage $mosquee_image)
     {
         return view('mosquee_images.edit', [
             'old_mosquee_images' => $mosquee_image,
@@ -72,7 +72,7 @@ class MosqueeImageController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Mosquee_image $mosquee_image)
+    public function update(Request $request, MosqueeImage $mosquee_image)
     {
         $validate = $request->validate([
             'mosquee_id' => 'required',
@@ -95,7 +95,7 @@ class MosqueeImageController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Mosquee_image $mosquee_image)
+    public function destroy(MosqueeImage $mosquee_image)
     {
         if($mosquee_image->source){
             Storage::delete($mosquee_image->source);

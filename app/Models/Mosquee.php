@@ -2,31 +2,41 @@
 
 namespace App\Models;
 
-use App\Models\Mosquee_image;
-use App\Models\Mosquee_contact;
-use App\Models\Mosquee_follower;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Mosquee extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuid;
 
-    protected $guarded = ['id'];
-    public $incrementing = false;
-    protected $keyType = 'string';
+    protected $fillable = [
+        'name',
+        'address',
+        'street',
+        'district',
+        'city',
+        'province',
+        'latitude',
+        'longitude',
+    ];
 
-    public function mosquee_image(): HasOne{
-        return $this->hasOne(Mosquee_image::class);
+    protected $guarded = [
+        'id',
+    ];
+
+    public function image()
+    {
+        return $this->hasOne(MosqueeImage::class);
     }
 
-    public function mosquee_contact(): HasOne{
-        return $this->hasOne(Mosquee_contact::class);
+    public function images()
+    {
+        return $this->hasMany(MosqueeImage::class);
     }
 
-    public function mosquee_follower(): HasMany{
-        return $this->hasMany(Mosquee_follower::class, 'mosquee_id');
+    public function contacts()
+    {
+        return $this->hasMany(MosqueeContact::class);
     }
 }

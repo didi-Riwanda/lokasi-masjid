@@ -12,7 +12,7 @@
     @if ( $message = Session::get('success') )
         <p>{{ $message }}</p>
     @endif
-    
+
     <a href="{{ route('mosquee.create') }}">Create</a>
     <ul>
         @foreach ($all_mosquee as $mosquees)

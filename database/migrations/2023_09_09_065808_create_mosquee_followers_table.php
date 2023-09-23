@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('mosquee_followers', function (Blueprint $table) {
             $table->id();
-            $table->char('uuid');
-            $table->foreignId('mosquee_id');
-            // $table->foreignId('user_id')->nullable();
+            $table->bigInteger('mosquee_id');
+            $table->bigInteger('user_id');
             $table->timestamps();
         });
     }

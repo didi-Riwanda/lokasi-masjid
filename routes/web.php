@@ -5,13 +5,10 @@ use App\Http\Controllers\MosqueeController;
 use App\Http\Controllers\MosqueeFollowerController;
 use App\Http\Controllers\MosqueeImageController;
 use App\Http\Controllers\MosqueeSharedController;
-use App\Models\Mosquee_follower;
 use Illuminate\Support\Facades\Route;
 use App\Models\Mosquee;
-
-
-
-
+use App\Models\MosqueeFollower;
+use Illuminate\Support\Facades\Cache;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,13 +22,17 @@ use App\Models\Mosquee;
 */
 
 Route::get('/', function (Mosquee $mosquee) {
-    return view('index', [
-        'all_data' => Mosquee_follower::all(),
-        'all_mosquee' => Mosquee::all()
-        // 'mosquee_follower' => Mosquee_follower::withCount('mosquee')->orderBy('mosquee_id', 'asc')->paginate(10),
-        // 'mosquee' => $mosquee->mosquee_follower->count()
-    ]);
-});
+    // return view('index', [
+    //     'all_data' => MosqueeFollower::all(),
+    //     'all_mosquee' => Mosquee::all()
+    //     // 'mosquee_follower' => Mosquee_follower::withCount('mosquee')->orderBy('mosquee_id', 'asc')->paginate(10),
+    //     // 'mosquee' => $mosquee->mosquee_follower->count()
+    // ]);
+
+    return Cache::remember('mosquee', 60, function () {
+        return Mosquee::all();
+    });
+})->name('home');
 
 Route::get('/mosquee/detail/{mosquee:uuid}', function(Mosquee $mosquee){
     return view('show', [
@@ -42,17 +43,17 @@ Route::get('/mosquee/detail/{mosquee:uuid}', function(Mosquee $mosquee){
 
 
 Route::resource('mosquee', MosqueeController::class);
-Route::get('/mosquee/{mosquee:uuid}', [MosqueeController::class, 'detail']);
-Route::resource('mosquee_images', MosqueeImageController::class);
-Route::resource('mosquee_contact', MosqueeContactController::class);
-Route::resource('mosquee_followers', MosqueeFollowerController::class);
-Route::get('/mosquee_followers/{mosquee_follower:uuid}', [MosqueeFollowerController::class, 'detail']);
-Route::resource('mosquee_shared', MosqueeSharedController::class);
+// Route::get('/mosquee/{mosquee:uuid}', [MosqueeController::class, 'detail']);
+// Route::resource('mosquee_images', MosqueeImageController::class);
+// Route::resource('mosquee_contact', MosqueeContactController::class);
+// Route::resource('mosquee_followers', MosqueeFollowerController::class);
+// Route::get('/mosquee_followers/{mosquee_follower:uuid}', [MosqueeFollowerController::class, 'detail']);
+// Route::resource('mosquee_shared', MosqueeSharedController::class);
 // Route::resource('user', UserController::class)->middleware('guest');
 // Route::get('/login', [LoginController::class, 'index'])->middleware('guest');
 // Route::post('login', [LoginController::class, 'autenticate'])->middleware('guest');
 // Route::post('logout', [LoginController::class, 'logout']);
-Route::resource('mosquee_shareds', MosqueeSharedController::class);
+// Route::resource('mosquee_shareds', MosqueeSharedController::class);
 
 // Route::get('/m/{masjidId}', function($masjidId){
 
