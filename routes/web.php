@@ -5,6 +5,7 @@ use App\Http\Controllers\MosqueeController;
 use App\Http\Controllers\MosqueeFollowerController;
 use App\Http\Controllers\MosqueeImageController;
 use App\Http\Controllers\MosqueeSharedController;
+use App\Models\Hadist;
 use Illuminate\Support\Facades\Route;
 use App\Models\Mosquee;
 use App\Models\MosqueeFollower;
@@ -29,9 +30,34 @@ Route::get('/', function (Mosquee $mosquee) {
     //     // 'mosquee' => $mosquee->mosquee_follower->count()
     // ]);
 
-    return Cache::remember('mosquee', 60, function () {
-        return Mosquee::all();
-    });
+    // return Cache::remember('mosquee', 60, function () {
+    //     return Mosquee::all();
+    // });
+
+    $content = file_get_contents(__DIR__.'/./mytext.txt');
+    $splits = preg_split('/\),\([0-9]+,/', $content);
+    $splits[0] = preg_replace('/^\([0-1]+,/', '', $splits[0]);
+    echo '<pre>';
+    foreach ($splits as $split) {
+        $contexts = explode("','", $split);
+        $title = preg_replace('/^(\,|\')/', '', $contexts[0]);
+        $source = $contexts[1];
+        $text = $contexts[2];
+        $translation = $contexts[3];
+        $category = $contexts[4];
+        $noted = $contexts[5];
+
+        // Hadist::create([
+        //     'title' => $title,
+        //     'source' => $source,
+        //     'text' => $text,
+        //     'translation' => $translation,
+        //     'category' => $category,
+        //     'noted' => $noted,
+        // ]);
+    }
+
+    return Hadist::all();
 })->name('home');
 
 Route::get('/mosquee/detail/{mosquee:uuid}', function(Mosquee $mosquee){

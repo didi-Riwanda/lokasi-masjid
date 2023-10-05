@@ -53,7 +53,7 @@ class MosqueeController extends Controller
 
             //     $model->orWhere('name', 'like', '%'.$word.'%');
             // }
-            $search = new SmartSearch($search, 'name|address');
+            $search = new SmartSearch($search, 'name');
             $model->where($search->getBuilderFilter());
         })->latest();
         if (! empty($coordinates['lat']) && ! empty($coordinates['lng'])) {

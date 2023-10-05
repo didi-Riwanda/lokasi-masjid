@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Api;
 
-class MosqueeIndexRequest extends BaseRequest
+use Illuminate\Foundation\Http\FormRequest;
+
+class HadistCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,16 +23,6 @@ class MosqueeIndexRequest extends BaseRequest
     {
         return [
             'q' => 'nullable|string|max:50',
-            'latitude' => [
-                'nullable',
-                'numeric',
-                'regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/',
-            ],
-            'longitude' => [
-                'nullable',
-                'numeric',
-                'regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/',
-            ],
         ];
     }
 }
