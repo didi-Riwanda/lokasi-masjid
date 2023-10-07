@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\HadistController;
 use App\Http\Controllers\Api\MosqueeController;
 use Illuminate\Http\Request;
@@ -29,4 +30,8 @@ Route::prefix('hadist')->group(function () {
     Route::get('/chapters', [HadistController::class, 'chapters']);
     Route::get('/categories', [HadistController::class, 'categories']);
     Route::get('/{hadist}', [HadistController::class, 'show']);
+});
+Route::prefix('article')->group(function () {
+    Route::get('/', [ArticleController::class, 'index']);
+    Route::get('/{article}', [ArticleController::class, 'show']);
 });

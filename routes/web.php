@@ -1,14 +1,19 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MosqueeContactController;
 use App\Http\Controllers\MosqueeController;
 use App\Http\Controllers\MosqueeFollowerController;
 use App\Http\Controllers\MosqueeImageController;
 use App\Http\Controllers\MosqueeSharedController;
+use App\Http\Controllers\StudyController;
 use App\Models\Hadist;
 use Illuminate\Support\Facades\Route;
 use App\Models\Mosquee;
 use App\Models\MosqueeFollower;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 /*
@@ -69,6 +74,10 @@ Route::get('/mosquee/detail/{mosquee:uuid}', function(Mosquee $mosquee){
 
 
 Route::resource('mosquee', MosqueeController::class);
+Route::resource('article', ArticleController::class);
+Route::resource('category', CategoryController::class);
+Route::resource('study', StudyController::class);
+// Route::resource('hadist', ArticleController::class);
 // Route::get('/mosquee/{mosquee:uuid}', [MosqueeController::class, 'detail']);
 // Route::resource('mosquee_images', MosqueeImageController::class);
 // Route::resource('mosquee_contact', MosqueeContactController::class);
@@ -88,3 +97,19 @@ Route::resource('mosquee', MosqueeController::class);
 
 //     return "Masjid " . $masjid->nama . " memiliki " . $followerCount . " follower.";
 // });
+
+Route::post('ckupload', function (Request $request) {
+    $originName = $request->file('upload')->getClientOriginalName();
+    $fileName = pathinfo($originName, PATHINFO_FILENAME);
+    $extension = $request->file('upload')->getClientOriginalExtension();
+    $fileName = $fileName . '_' . time() . '.' . $extension;
+
+    $request->file('upload')->move(public_path('media'), $fileName);
+
+    $url = asset('media/' . $fileName);
+    return response()->json(['fileName' => $fileName, 'uploaded'=> 1, 'url' => $url]);
+})->name('image.upload');
+
+Route::prefix('image')->group(function () {
+    Route::get('/{path}', [ImageController::class, 'display'])->where('path', '(.*)');
+});

@@ -47,6 +47,24 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('category.index') }}" class="nav-link">
+                        <i class="nav-icon fa-solid fa-mosque"></i>
+                        <p>Kategori</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('article.index') }}" class="nav-link">
+                        <i class="nav-icon fa-solid fa-mosque"></i>
+                        <p>Artikel</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('study.index') }}" class="nav-link">
+                        <i class="nav-icon fa-solid fa-mosque"></i>
+                        <p>Kajian</p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('mosquee.index') }}" class="nav-link">
                         <i class="nav-icon fa-solid fa-mosque"></i>
                         <p>Lokasi Masjid</p>

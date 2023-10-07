@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('mosquees', function (Blueprint $table) {
             $table->id();
-            $table->char('uuid', 36)->index();
+            $table->char('uuid', 36)->unique()->index();
             $table->string('name');
             $table->string('address', 350);
             $table->string('street');
