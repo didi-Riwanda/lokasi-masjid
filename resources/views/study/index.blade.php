@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Diklat')
+@section('title', 'Kajian')
 
 @section('breadcrumb')
     <ol class="breadcrumb float-sm-right">
@@ -12,7 +12,11 @@
 @section('content')
     <div class="card card-info">
         <div class="card-header">
-            <h3 class="card-title">Daftar Unit</h3>
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="card-title">Daftar Kajian</h3>
+
+                <a href="{{ route('study.create') }}" class="btn btn-secondary btn-sm">Tambah</a>
+            </div>
         </div>
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -25,20 +29,39 @@
                 <table id="table1" class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th>No.</th>
                             <th>Judul</th>
+                            <th>Kategori</th>
+                            <th>Video</th>
                             <th></th>
+                        </tr>
                     </thead>
                     <tbody>
                         @forelse ($paginate['data'] as $item)
                             <tr>
                                 <td>{{ $item['title'] }}</td>
-                                <td>{{ $item['url'] }}</td>
-                                <td></td>
+                                <td>{{ optional($item['category'])['name'] }}</td>
+                                <td>
+                                    <a href="{{ $item['url'] }}">
+                                        {{ $item['url'] }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{ route('study.edit', ['study' => $item['uuid']]) }}" class="btn btn-warning">
+                                        Ubah
+                                    </a>
+                                    <form action="{{ route('study.destroy', ['study' => $item['uuid']]) }}" method="post">
+                                        @csrf
+                                        @method('delete')
+
+                                        <button type="submit" class="btn btn-danger">
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         @empty
                             <tr class="text-center">
-                                <td colspan="3">Data tidak ditemukan.</td>
+                                <td colspan="4">Data tidak ditemukan.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -52,13 +75,13 @@
             </div>
 
             <ul class="pagination pagination-sm m-0 ml-auto">
-                <li class="page-item @if (empty($paginate['meta']['previous'])) disable @endif">
-                    <a class="page-link" href="{{ route('study.index', ['cursor', $paginate['meta']['previous']]) }}">
+                <li class="page-item @if (empty($paginate['meta']['previous'])) disabled @endif">
+                    <a class="page-link" href="{{ route('study.index', ['cursor' => $paginate['meta']['previous']]) }}">
                         &laquo;
                     </a>
                 </li>
-                <li class="page-item @if (empty($paginate['meta']['next'])) disable @endif">
-                    <a class="page-link" href="{{ route('study.index', ['cursor', $paginate['meta']['next']]) }}">
+                <li class="page-item @if (empty($paginate['meta']['next'])) disabled @endif">
+                    <a class="page-link" href="{{ route('study.index', ['cursor' => $paginate['meta']['next']]) }}">
                         &raquo;
                     </a>
                 </li>

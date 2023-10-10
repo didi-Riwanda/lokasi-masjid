@@ -159,6 +159,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Alaouy\Youtube\YoutubeServiceProvider::class,
 
         /*
          * Application Service Providers...

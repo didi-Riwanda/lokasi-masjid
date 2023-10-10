@@ -39,4 +39,9 @@ class Mosquee extends Model
     {
         return $this->hasMany(MosqueeContact::class);
     }
+
+    public function schedules()
+    {
+        return $this->hasMany(MosqueeSchedule::class);
+    }
 }

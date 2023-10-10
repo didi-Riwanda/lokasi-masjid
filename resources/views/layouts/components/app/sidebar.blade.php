@@ -70,6 +70,24 @@
                         <p>Lokasi Masjid</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('murottal.index') }}" class="nav-link">
+                        <i class="nav-icon fa-solid fa-mosque"></i>
+                        <p>Murottal</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('hadist.index') }}" class="nav-link">
+                        <i class="nav-icon fa-solid fa-mosque"></i>
+                        <p>Hadist</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('dzikir.index') }}" class="nav-link">
+                        <i class="nav-icon fa-solid fa-mosque"></i>
+                        <p>Dzikir</p>
+                    </a>
+                </li>
                 {{-- <li class="nav-item">
                     <a href="{{ route('admin.home') }}" class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>

@@ -23,7 +23,7 @@ class CreateCategoryRequest extends FormRequest
     {
         return [
             'title' => 'required|string',
-            'target' => 'required|in_array:article,hadist,study',
+            'target' => 'required|in:article,hadist,study,dzikir',
         ];
     }
 }

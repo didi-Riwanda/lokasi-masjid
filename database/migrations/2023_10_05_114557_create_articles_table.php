@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('subtitle')->nullable();
             $table->longText('content')->nullable();
-            $table->string('imgsrc');
+            $table->longText('imgsrc');
             $table->integer('views')->default(0);
             $table->timestamps();
         });

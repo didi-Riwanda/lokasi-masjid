@@ -13,8 +13,19 @@ class ArticleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $model = Article::select([
+            'id',
+            'title',
+            'subtitle',
+            DB::raw('IF(`content` IS NULL, "poster", "article")'),
+            'imgsrc',
+            'created_at',
+        ]);
+        $model = $model->when(! empty($request->search), function ($query) use ($request) {
+            $query->where('name', 'like', '%'.$request->search.'%');
+        });
         $paginator = Article::cursorPaginate(15);
 
         return view('article.index', [

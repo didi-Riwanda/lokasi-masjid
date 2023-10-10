@@ -13,10 +13,32 @@ class MosqueeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('mosquee.index',[
-            'all_mosquee' => Mosquee::all(),
+        $model = Mosquee::select([
+            'id',
+            'name',
+            'address',
+            'street',
+            'district',
+            'city',
+            'province',
+            'created_at',
+        ]);
+        $model = $model->when(! empty($request->search), function ($query) use ($request) {
+            $query->where('name', 'like', '%'.$request->search.'%');
+        });
+        $paginator = Mosquee::cursorPaginate(15);
+
+        return view('mosquee.index', [
+            'paginate' => [
+                'data' => $paginator->items(),
+                'meta' => [
+                    'count' => $paginator->count(),
+                    'next' => optional($paginator->nextCursor())->encode(),
+                    'previous' => optional($paginator->previousCursor())->encode(),
+                ],
+            ],
         ]);
     }
 

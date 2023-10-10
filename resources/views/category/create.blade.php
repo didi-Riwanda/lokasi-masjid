@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Tambah Artikel atau Poster')
+@section('title', 'Tambah Kategori')
 
 @section('breadcrumb')
     <ol class="breadcrumb float-sm-right">
@@ -13,7 +13,7 @@
 @section('content')
     <div class="card card-info">
         <div class="card-header">
-            <h3 class="card-title">Tambah Lokasi Masjid Baru</h3>
+            <h3 class="card-title">Tambah Kategori</h3>
         </div>
         <div class="card-body">
             <form action="{{ route('category.store') }}" method="post" enctype="multipart/form-data">
