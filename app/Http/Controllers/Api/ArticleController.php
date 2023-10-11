@@ -12,7 +12,15 @@ class ArticleController extends Controller
 {
     public function index()
     {
-        $model = Article::select('id', 'uuid', 'title', 'content', 'imgsrc','created_at');
+        $fields = [
+            'id',
+            'uuid',
+            'title',
+            'content',
+            'imgsrc',
+            'created_at',
+        ];
+        $model = Article::select($fields);
         return ArticleResource::make($model->cursorPaginate(20));
     }
 

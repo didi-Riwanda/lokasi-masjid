@@ -6,6 +6,7 @@ use App\Models\Murottal;
 use App\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class MurottalController extends Controller
 {
@@ -50,6 +51,10 @@ class MurottalController extends Controller
      */
     public function store(Request $request)
     {
+        @ini_set('upload_max_size', '256M');
+        @ini_set('post_max_size', '256M');
+        @ini_set('max_execution_time', '300');
+
         return DB::transaction(function () use ($request) {
             $path = optional($request->media)->store('murottals/'.Str::slug($request->qari));
             Murottal::create([
@@ -84,9 +89,16 @@ class MurottalController extends Controller
      */
     public function update(Request $request, Murottal $murottal)
     {
+        @ini_set('upload_max_size', '256M');
+        @ini_set('post_max_size', '256M');
+        @ini_set('max_execution_time', '300');
+
         return DB::transaction(function () use ($request, $murottal) {
             $path = $murottal->src;
             if (! empty($request->media)) {
+                if (Storage::exists($path)) {
+                    Storage::delete($path);
+                }
                 $path = optional($request->media)->store('murottals/'.Str::slug($request->qari));
             }
             return redirect()->route('murottal.index');
@@ -98,6 +110,9 @@ class MurottalController extends Controller
      */
     public function destroy(Murottal $murottal)
     {
+        if (Storage::exists($murottal->src)) {
+            Storage::delete($murottal->src);
+        }
         $murottal->delete();
         return redirect()->route('murottal.index');
     }

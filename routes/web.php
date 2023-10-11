@@ -3,6 +3,7 @@
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DzikirController;
+use App\Http\Controllers\FilesystemBuildController;
 use App\Http\Controllers\HadistController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MosqueeContactController;
@@ -117,6 +118,9 @@ Route::post('ckupload', function (Request $request) {
     return response()->json(['fileName' => $fileName, 'uploaded'=> 1, 'url' => $url]);
 })->name('image.upload');
 
-Route::prefix('image')->group(function () {
-    Route::get('/{path}', [ImageController::class, 'display'])->where('path', '(.*)');
+Route::prefix('image')->name('image.')->group(function () {
+    Route::get('/{path}', [FilesystemBuildController::class, 'image'])->where('path', '(.*)')->name('url');
+});
+Route::prefix('audio')->name('audio.')->group(function () {
+    Route::get('/{path}', [FilesystemBuildController::class, 'audio'])->where('path', '(.*)')->name('url');
 });
