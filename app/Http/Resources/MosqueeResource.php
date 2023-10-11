@@ -3,22 +3,10 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class MosqueeResource extends JsonResource
+class MosqueeResource extends ResourceCollection
 {
-
-    public $status;
-    public $message;
-    public $resource;
-
-    public function __construct($status, $message, $resource)
-    {
-        parent::__construct($resource);
-        $this->status = $status;
-        $this->message = $message;
-    }
-
     /**
      * Transform the resource into an array.
      *
@@ -27,9 +15,16 @@ class MosqueeResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'success' => $this->status,
-            'message' => $this->message,
-            'data' => $this->resource
+            'data' => $this->collection->map(function ($row) {
+                return [
+                    'id' => $row->uuid,
+                    'name' => $row->name,
+                    'latitude' => $row->latitude,
+                    'longitude' => $row->longitude,
+                    'address' => $row->address,
+                    'distance' => $row->distance / 1000,
+                ];
+            }),
         ];
     }
 }

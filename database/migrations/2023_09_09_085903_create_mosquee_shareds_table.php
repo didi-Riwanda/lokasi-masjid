@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('mosquee_shareds', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
-            $table->string('ip_address');
+            $table->bigInteger('mosquee_id');
+            $table->bigInteger('user_id')->nullable();
+            $table->ipAddress();
             $table->timestamps();
         });
     }

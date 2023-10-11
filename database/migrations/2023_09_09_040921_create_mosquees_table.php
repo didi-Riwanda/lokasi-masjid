@@ -13,17 +13,17 @@ return new class extends Migration
     {
         Schema::create('mosquees', function (Blueprint $table) {
             $table->id();
-            $table->char('uuid');
+            $table->char('uuid', 36)->unique()->index();
             $table->string('name');
-            $table->text('addrees');
+            $table->string('address', 350);
             $table->string('street');
-            $table->string('subdistrict');
+            $table->string('district');
             $table->string('city');
             $table->string('province');
-            $table->double('latitude', 4, 2)->nullable();
-            $table->double('longtitude', 4, 2)->nullable();
-            $table->integer('followers');
-            $table->integer('shareds');
+            $table->double('latitude');
+            $table->double('longitude');
+            $table->integer('followers')->default(0);
+            $table->integer('shareds')->default(0);
             $table->timestamps();
         });
     }

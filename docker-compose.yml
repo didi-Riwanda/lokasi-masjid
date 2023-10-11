@@ -1,0 +1,49 @@
+version: '3.9'
+
+networks:
+  ashiilapp:
+
+services:
+  redis:
+    container_name: ashiilapp-redis
+    image: redis:alpine
+    restart: unless-stopped
+    # ports:
+    #   - 6379:6379
+    networks:
+      - ashiilapp
+
+  php:
+    container_name: ashiilapp-php
+    build:
+      context: ./.docker/php
+      dockerfile: Dockerfile
+      args:
+        - PHPUSER=${PHPUSER:-www-data}
+        - PHPGROUP=${PHPGROUP:-www-data}
+    # ports:
+    #   - 9000:9000
+    restart: unless-stopped
+    volumes:
+      - ./:/var/www
+    networks:
+      - ashiilapp
+
+  nginx:
+    container_name: ashiilapp-nginx
+    build:
+      context: ./.docker/nginx
+      dockerfile: Dockerfile
+
+      args:
+        - NGINXUSER=${NGINXUSER:-www-data}
+        - NGINXGROUP=${NGINXGROUP:-www-data}
+    ports:
+      - 8000:80
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - redis
+      - php
+    networks:
+      - ashiilapp

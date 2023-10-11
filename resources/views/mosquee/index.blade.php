@@ -1,56 +1,146 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Mosquee</title>
-</head>
-<body>
+@extends('layouts.app')
 
+@section('title', 'Masjid')
 
-    @if ( $message = Session::get('success') )
-        <p>{{ $message }}</p>
+@section('breadcrumb')
+    <ol class="breadcrumb float-sm-right">
+        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+        <li class="breadcrumb-item active">Masjid</li>
+    </ol>
+@endsection
+
+@section('content')
+    <div class="card card-info">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="card-title">Daftar Masjid</h3>
+
+                <a href="{{ route('mosquee.create') }}" class="btn btn-secondary btn-sm">Tambah</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div></div>
+                <form action="{{ route('mosquee.index') }}">
+                    <input type="search" class="form-control" name="search" placeholder="Search">
+                </form>
+            </div>
+            <div class="table-responsive">
+                <table id="table1" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Alamat</th>
+                            <th>Jalan</th>
+                            <th>Kecamatan</th>
+                            <th>Kota / Kabupaten</th>
+                            <th>Provinsi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($paginate['data'] as $item)
+                            <tr>
+                                <td>{{ $item['name'] }}</td>
+                                <td>{{ $item['address'] }}</td>
+                                <td>{{ $item['street'] }}</td>
+                                <td>{{ $item['district'] }}</td>
+                                <td>{{ $item['city'] }}</td>
+                                <td>{{ $item['province'] }}</td>
+                                <td>
+                                    <a href="{{ route('mosquee.edit', ['mosquee' => $item['uuid']]) }}" class="btn btn-warning">
+                                        Ubah
+                                    </a>
+                                    <form action="{{ route('mosquee.destroy', ['mosquee' => $item['uuid']]) }}" method="post">
+                                        @csrf
+                                        @method('delete')
+
+                                        <button type="submit" class="btn btn-danger">
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr class="text-center">
+                                <td colspan="6">Data tidak ditemukan.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer d-flex justify-content-between align-items-center">
+            <div class="text-sm">
+                Total {{ $paginate['meta']['count'] }}
+            </div>
+
+            <ul class="pagination pagination-sm m-0 ml-auto">
+                <li class="page-item @if (empty($paginate['meta']['previous'])) disabled @endif">
+                    <a class="page-link" href="{{ route('mosquee.index', ['cursor' => $paginate['meta']['previous']]) }}">
+                        &laquo;
+                    </a>
+                </li>
+                <li class="page-item @if (empty($paginate['meta']['next'])) disabled @endif">
+                    <a class="page-link" href="{{ route('mosquee.index', ['cursor' => $paginate['meta']['next']]) }}">
+                        &raquo;
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+@endsection
+
+@push('windowhead')
+    <!-- SweetAlert2 -->
+    <link
+        rel="preload"
+        as="style"
+        fetchpriority="high"
+        onload="this.onload=null;this.rel='stylesheet'"
+        href="{{ asset('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}"
+    >
+    <!-- DataTables -->
+    <link
+        rel="preload"
+        as="style"
+        fetchpriority="high"
+        onload="this.onload=null;this.rel='stylesheet'"
+        href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}"
+    >
+    <link
+        rel="preload"
+        as="style"
+        fetchpriority="high"
+        onload="this.onload=null;this.rel='stylesheet'"
+        href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}"
+    >
+    <link
+        rel="preload"
+        as="style"
+        fetchpriority="high"
+        onload="this.onload=null;this.rel='stylesheet'"
+        href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}"
+    >
+@endpush
+
+@push('windowbody')
+    <!-- SweetAlert2 -->
+    <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+
+    @if (session('notification'))
+        <script>
+            var Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+            Toast.fire({
+                icon: 'success',
+                title: '{{ session('notification') }}'
+            });
+        </script>
     @endif
-    
-    <a href="{{ route('mosquee.create') }}">Create</a>
-    <ul>
-        @foreach ($all_mosquee as $mosquees)
-            <li>{{ $mosquees->name }}</li>
-            {{-- <li>{{ $mosquees->mosquee_follower->uuid }}</li> --}}
-            <li>{{ $mosquees->addrees }}</li>
-            <li>{{ $mosquees->street }}</li>
-            <li>{{ $mosquees->subdistrict }}</li>
-            <li>{{ $mosquees->city }}</li>
-            <li>{{ $mosquees->province }}</li>
-            <li>{{ $mosquees->latitude }}</li>
-            <li>{{ $mosquees->longtitude }}</li>
-            <li>{{ $mosquees->followers }}</li>
-            <li>{{ $mosquees->shareds }}</li>
-            {{-- <li>{{ $mosquees->mosquee_follower->id }}</li> --}}
-            {{-- <li>{{ $mosquees->mosquee_contact->id }}</li> --}}
-              {{-- <li> --}}
-                {{-- @php
-                    $m = $mosquees->mosquee_image->source
-                @endphp
-                @if ($m) --}}
-                    {{-- <img src="{{ asset('storage/' . $mosquees->mosquee_image->source ) }}" alt=""> --}}
-                {{-- @else
-                    <img src="{{ asset('storage/mosquee_images/uniks.png' ) }}" alt="">
-                @endif --}}
-            {{-- </li> --}}
-            {{-- <li>{{ $mosquees->mosquee_contact->name }}</li> --}}
-
-            <form action="{{ route('mosquee.destroy', $mosquees->id) }}" method="POST">
-                @csrf
-                @method('DELETE')
-
-                <a href="/mosquee/{{ $mosquees->uuid }}">Show</a>
-                <a href="{{ route('mosquee.edit', $mosquees->id) }}">Update</a>
-
-                <button onclick="return confirm('Yakin Data di Hapus?')">Delete</button>
-            </form>
-        @endforeach
-    </ul>
-</body>
-</html>
+@endpush
