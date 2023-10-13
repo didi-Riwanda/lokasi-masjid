@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class MurottalResource extends ResourceCollection
+class MurottalQariResource extends ResourceCollection
 {
     /**
      * Transform the resource into an array.
@@ -17,11 +18,8 @@ class MurottalResource extends ResourceCollection
         return [
             'data' => $this->collection->map(function ($row) {
                 return [
-                    'id' => $row->uuid,
-                    'title' => $row->title,
-                    'qari' => $row->qari,
-                    'source' => route('audio.url', ['path' => $row->src]),
-                    'duration' => $row->duration,
+                    'slug' => Str::slug($row->qari),
+                    'name' => $row->qari,
                 ];
             }),
         ];

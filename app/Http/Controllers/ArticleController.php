@@ -7,6 +7,7 @@ use App\Models\Article;
 use App\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
 {
@@ -118,6 +119,23 @@ class ArticleController extends Controller
                 foreach ($request->images as $image) {
                     $imgs[] = str_replace(',', '', $image->store('/articles'));
                 }
+
+                $sources = explode(',', $article->imgsrc);
+                foreach ($imgs as $key => $img) {
+                    if (isset($sources[$key])) {
+                        $source = $sources[$key];
+                        if (Storage::exists($source)) {
+                            Storage::delete($source);
+                        }
+                        unset($sources[$key]);
+                    }
+                }
+
+                foreach ($sources as $source) {
+                    if (Storage::exists($source)) {
+                        Storage::delete($source);
+                    }
+                }
             }
             $subtitle = null;
             if (! empty($content)) {
@@ -139,6 +157,12 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
+        $sources = explode(',', $article->imgsrc);
+        foreach ($sources as $source) {
+            if (Storage::exists($source)) {
+                Storage::delete($source);
+            }
+        }
         $article->delete();
         return redirect()->route('article.index')->with([
             'notification' => 'berhasil menghapus data',

@@ -42,7 +42,7 @@
                         </label>
 
                         <div class="col-md-8">
-                            <div class="custom-file @error('images'.$i) is-invalid @enderror">
+                            <div class="custom-file @error('images.'.$i) is-invalid @enderror">
                                 <input type="file" name="images[{{ $i }}]" class="custom-file-input" id="image-{{ $i }}">
                                 <label class="custom-file-label" for="image-{{ $i }}">Choose file</label>
                             </div>
@@ -55,6 +55,16 @@
                         </div>
                     </div>
                 @endfor
+
+                @if (isset($errors) && $errors->hasBag('images'))
+                <div class="mb-3">
+                    @error('images')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                @endif
 
                 <div class="row mb-3">
                     <label for="body" class="col-md-4 col-form-label text-md-end">

@@ -11,7 +11,7 @@ class EditArticleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,10 @@ class EditArticleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => 'required|string',
+            'images' => 'required|array|min:1',
+            'images.*' => 'required|image|max:2048',
+            'body' => 'nullable|string',
         ];
     }
 }

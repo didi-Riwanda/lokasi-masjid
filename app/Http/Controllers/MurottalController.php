@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Murottal;
 use App\Support\Str;
+use FFMpeg\FFProbe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -57,10 +58,12 @@ class MurottalController extends Controller
 
         return DB::transaction(function () use ($request) {
             $path = optional($request->media)->store('murottals/'.Str::slug($request->qari));
+            $ffprobe = FFProbe::create();
             Murottal::create([
                 'title' => $request->title,
                 'qari' => $request->qari,
                 'src' => $path,
+                'duration' => +$ffprobe->format(Storage::path($path))->get('duration'),
             ]);
             return redirect()->route('murottal.index');
         });
@@ -94,13 +97,22 @@ class MurottalController extends Controller
         @ini_set('max_execution_time', '300');
 
         return DB::transaction(function () use ($request, $murottal) {
+            $duration = $murottal->duration;
             $path = $murottal->src;
             if (! empty($request->media)) {
                 if (Storage::exists($path)) {
                     Storage::delete($path);
                 }
                 $path = optional($request->media)->store('murottals/'.Str::slug($request->qari));
+                $ffprobe = FFProbe::create();
+                $duration = +$ffprobe->format(Storage::path($path))->get('duration');
             }
+            $murottal->update([
+                'title' => $request->title,
+                'qari' => $request->qari,
+                'src' => $path,
+                'duration' => $duration,
+            ]);
             return redirect()->route('murottal.index');
         });
     }

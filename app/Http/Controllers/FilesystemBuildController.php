@@ -30,11 +30,15 @@ class FilesystemBuildController extends Controller
         $type = Storage::mimeType($path);
         $size = Storage::fileSize($path);
 
+        if ($type === 'application/octet-stream') {
+            $type = 'audio/mpeg';
+        }
+
         $response = response($file);
         $response = $response->header('Cache-Control', 'public');
         $response = $response->header('Content-type', $type);
         $response = $response->header('Content-Transfer-Encoding', 'binary');
-        $response = $response->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
+        $response = $response->header('Content-Disposition', 'inline; filename="'.$filename.'"');
         $response = $response->header('Content-Length', $size);
         return $response;
     }

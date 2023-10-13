@@ -23,7 +23,9 @@ class ArticleResource extends ResourceCollection
                     'id' => $row->uuid,
                     'title' => $row->title,
                     'subtitle' => $this->getSubtitleFromContent($content),
-                    'fileurl' => explode(',', $row->imgsrc),
+                    'fileurl' => array_map(function ($row) {
+                        return route('image.url', ['path' => $row]);
+                    }, explode(',', $row->imgsrc)),
                     'type' => ! empty($content) ? 'article' : 'poster',
                     'created' => $row->created_at->setTimezone('UTC'),
                 ];

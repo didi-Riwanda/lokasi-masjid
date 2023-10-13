@@ -50,5 +50,6 @@ Route::prefix('dzikir')->group(function () {
 });
 Route::prefix('murottal')->group(function () {
     Route::get('/', [MurottalController::class, 'index']);
+    Route::get('/qaris', [MurottalController::class, 'qaris']);
     Route::get('/{murottal}', [MurottalController::class, 'show']);
 });
