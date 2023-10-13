@@ -56,6 +56,8 @@ Route::middleware(['auth'])->group(function () {
         $url = asset('media/' . $fileName);
         return response()->json(['fileName' => $fileName, 'uploaded'=> 1, 'url' => $url]);
     })->name('image.upload');
+
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 Route::middleware(['guest'])->group(function () {
