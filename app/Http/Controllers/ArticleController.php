@@ -8,6 +8,7 @@ use App\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Spatie\LaravelImageOptimizer\Facades\ImageOptimizer;
 
 class ArticleController extends Controller
 {
@@ -18,6 +19,7 @@ class ArticleController extends Controller
     {
         $model = Article::select([
             'id',
+            'uuid',
             'title',
             'subtitle',
             DB::raw('IF(`content` IS NULL, "poster", "article")'),
@@ -27,7 +29,7 @@ class ArticleController extends Controller
         $model = $model->when(! empty($request->search), function ($query) use ($request) {
             $query->where('name', 'like', '%'.$request->search.'%');
         });
-        $paginator = Article::cursorPaginate(15);
+        $paginator = $model->cursorPaginate(15);
 
         return view('article.index', [
             'paginate' => [
@@ -68,7 +70,9 @@ class ArticleController extends Controller
             $imgs = [];
             if (is_array($request->images) && count($request->images) > 0) {
                 foreach ($request->images as $image) {
-                    $imgs[] = str_replace(',', '', $image->store('/articles'));
+                    $path = $image->store('/articles');
+                    ImageOptimizer::optimize(Storage::path($path));
+                    $imgs[] = str_replace(',', '', $path);
                 }
             }
 

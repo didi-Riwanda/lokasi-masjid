@@ -21,7 +21,7 @@ class HadistController extends Controller
     public function categories(HadistCategoryRequest $request)
     {
         $search = $request->q;
-        $model = Hadist::select('id', 'source', 'created_at')->groupBy('source');
+        $model = Hadist::select('id', 'source', 'category', 'created_at')->groupBy('source');
         $model = $model->when(isset($search) && ! empty($search), function($model) use ($search) {
             $model->where('source', 'like', '%'.$search.'%');
         });

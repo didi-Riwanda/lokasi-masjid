@@ -40,7 +40,10 @@ class ArticleController extends Controller
             'title' => $article->title,
             'subtitle' => $article->subtitle,
             'content' => $article->content,
-            'imgsrc' => explode(',', $article->imgsrc),
+            'fileurl' => array_map(function ($row) {
+                return route('image.url', ['path' => $row]);
+            }, explode(',', $article->imgsrc)),
+            'type' => ! empty($article->content) ? 'article' : 'poster',
             'views' => $article->views,
             'created' => $article->created_at,
         ];

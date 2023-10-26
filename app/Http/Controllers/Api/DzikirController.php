@@ -32,7 +32,11 @@ class DzikirController extends Controller
         $model = $model->when($coditional, function($model) use ($search) {
             $search = new SmartSearch($search, 'title|source');
             $model->where($search->getBuilderFilter());
-        })->latest();
+        });
+        $model = $model->when(! empty($request->category), function ($model) use ($request) {
+            $model->where('category_id', $request->category);
+        });
+        $model = $model->latest();
         return DzikirResource::make($model->cursorPaginate(100));
     }
 

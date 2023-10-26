@@ -18,6 +18,7 @@ class MurottalController extends Controller
     {
         $model = Murottal::select([
             'id',
+            'uuid',
             'title',
             'qari',
             'created_at',
@@ -25,7 +26,7 @@ class MurottalController extends Controller
         $model = $model->when(! empty($request->search), function ($query) use ($request) {
             $query->where('title', 'like', '%'.$request->search.'%');
         });
-        $paginator = Murottal::cursorPaginate(15);
+        $paginator = $model->cursorPaginate(15);
 
         return view('murottal.index', [
             'paginate' => [

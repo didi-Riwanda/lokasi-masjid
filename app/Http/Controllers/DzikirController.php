@@ -16,6 +16,7 @@ class DzikirController extends Controller
     {
         $model = Dzikir::select([
             'id',
+            'uuid',
             'category_id',
             'title',
             'source',
@@ -24,7 +25,7 @@ class DzikirController extends Controller
         $model = $model->when(! empty($request->search), function ($query) use ($request) {
             $query->where('title', 'like', '%'.$request->search.'%');
         });
-        $paginator = Dzikir::cursorPaginate(15);
+        $paginator = $model->cursorPaginate(15);
 
         return view('dzikir.index', [
             'paginate' => [

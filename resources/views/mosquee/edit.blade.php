@@ -1,30 +1,203 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Edit</title>
-</head>
-<body>
-    <form action="{{ route('mosquee.update', $old_mosquee->id) }}" method="POST">
-        @csrf
-        @method('PUT')
+@extends('layouts.app')
 
-        <input type="hidden" name="uuid" id="uuid">
-        <input type="text" name="name" id="name" value="{{ $old_mosquee->name }}"> <label for="name">Name of the Mosquee</label> <br>
-        <input type="text" name="addrees" id="addrees" value="{{ $old_mosquee->addrees }}"> <label for="addrees">Address</label> <br>
-        <input type="text" name="street" id="street" value="{{ $old_mosquee->street }}"> <label for="street">Street</label> <br>
-        <input type="text" name="subdistrict" id="subdistrict" value="{{ $old_mosquee->subdistrict }}"> <label for="subdistrict">Subdistrict</label> <br>
-        <input type="text" name="city" id="city" value="{{ $old_mosquee->city }}"> <label for="city">City</label> <br>
-        <input type="text" name="province" id="province" value="{{ $old_mosquee->province }}"> <label for="province">Province</label> <br>
-        <input type="text" name="latitude" id="latitude" value="{{ $old_mosquee->latitude }}"> <label for="latitude">Latitude</label> <br>
-        <input type="text" name="longtitude" id="longtitude" value="{{ $old_mosquee->longtitude }}"> <label for="longtitude">Longtitude</label> <br>
-        <input type="text" name="followers" id="followers" value="{{ $old_mosquee->followers }}"> <label for="followers">Followers</label> <br>
-        <input type="text" name="shareds" id="shareds" value="{{ $old_mosquee->shareds }}"> <label for="shareds">Shareds</label> <br>
+@section('title', 'Ubah Lokasi Masjid')
 
-        <button type="submit">Update</button>
-    
-    </form>
-</body>
-</html>
+@section('breadcrumb')
+    <ol class="breadcrumb float-sm-right">
+        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('mosquee.index') }}">Pengguna</a></li>
+        <li class="breadcrumb-item active">Ubah Pengguna</li>
+    </ol>
+@endsection
+
+@section('content')
+    <div class="card card-info">
+        <div class="card-header">
+            <h3 class="card-title">Ubah Lokasi Masjid Baru</h3>
+        </div>
+        <div class="card-body">
+            <form action="{{ route('mosquee.update', ['mosquee' => $mosquee->uuid]) }}" method="post" enctype="multipart/form-data">
+                @csrf
+                @method('patch')
+
+                <div class="row mb-3">
+                    <label for="name" class="col-md-4 col-form-label text-md-end">
+                        Nama
+                    </label>
+
+                    <div class="col-md-8">
+                        <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', $mosquee->name) }}" required autocomplete="off" autofocus>
+
+                        @error('name')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="district" class="col-md-4 col-form-label text-md-end">
+                        Kecamatan
+                    </label>
+
+                    <div class="col-md-8">
+                        <input id="district" type="text" class="form-control @error('district') is-invalid @enderror" name="district" value="{{ old('district', $mosquee->district) }}" required autocomplete="off">
+
+                        @error('district')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="city" class="col-md-4 col-form-label text-md-end">
+                        Kota
+                    </label>
+
+                    <div class="col-md-8">
+                        <input id="city" type="text" class="form-control @error('city') is-invalid @enderror" name="city" value="{{ old('city', $mosquee->city) }}" required autocomplete="off">
+
+                        @error('city')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="province" class="col-md-4 col-form-label text-md-end">
+                        Provinsi
+                    </label>
+
+                    <div class="col-md-8">
+                        <input id="province" type="text" class="form-control @error('province') is-invalid @enderror" name="province" value="{{ old('province', $mosquee->province) }}" required autocomplete="off">
+
+                        @error('province')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="street" class="col-md-4 col-form-label text-md-end">
+                        Jalan
+                    </label>
+
+                    <div class="col-md-8">
+                        <input id="street" type="text" class="form-control @error('street') is-invalid @enderror" name="street" value="{{ old('street', $mosquee->street) }}" required autocomplete="off">
+
+                        @error('street')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="address" class="col-md-4 col-form-label text-md-end">
+                        Alamat
+                    </label>
+
+                    <div class="col-md-8">
+                        <input id="address" type="text" class="form-control @error('address') is-invalid @enderror" name="address" value="{{ old('address', $mosquee->address) }}" required autocomplete="off">
+
+                        @error('address')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-md-4 col-form-label text-md-end">
+                        Koordinat
+                    </label>
+
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="latitude" class="col-md-4 col-form-label text-md-end">
+                                    Latitude
+                                </label>
+
+                                <input id="latitude" type="text" class="form-control @error('latitude') is-invalid @enderror" name="latitude" value="{{ old('latitude', $mosquee->latitude) }}" required autocomplete="off">
+
+                                @error('latitude')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label for="longitude" class="col-md-4 col-form-label text-md-end">
+                                    Longitude
+                                </label>
+
+                                <input id="longitude" type="text" class="form-control @error('longitude') is-invalid @enderror" name="longitude" value="{{ old('longitude', $mosquee->longitude) }}" required autocomplete="off">
+
+                                @error('longitude')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="map"></div>
+
+                <div class="card">
+                    <div class="card-body">
+                        @for ($i = 0; $i < 5; $i++)
+                            <div class="mb-3">
+                                <label for="choose-image-{{ $i }}" class="col-md-4 col-form-label text-md-end">
+                                    Image {{ $i + 1 }}
+                                </label>
+                                <div class="custom-file @error('images.'.$i) is-invalid @enderror">
+                                    <input type="file" name="images[{{ $i }}]" class="custom-file-input" id="choose-image-{{ $i }}">
+                                    <label class="custom-file-label" for="choose-image-{{ $i }}">Choose file</label>
+                                </div>
+
+                                @error('images.'.$i)
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        @endfor
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-between">
+                    <a href="{{ url()->previous() }}" class="btn btn-warning text-white">Kembali</a>
+                    <button type="submit" class="btn btn-success">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+@endsection
+
+@push('windowbody')
+    <script src="{{ asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
+    <script>
+        bsCustomFileInput.init();
+    </script>
+    {{-- <script>
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: -34.397, lng: 150.644},
+                zoom: 8
+            });
+        }
+    </script>
+    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCgA1jv3K6Uol_ABVa0cBBInike8RxsIws&callback=initMap"></script> --}}
+@endpush

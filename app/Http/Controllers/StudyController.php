@@ -19,6 +19,7 @@ class StudyController extends Controller
     {
         $model = Study::select([
             'id',
+            'uuid',
             'category_id',
             'title',
             'url',
@@ -27,7 +28,7 @@ class StudyController extends Controller
         $model = $model->when(! empty($request->search), function ($query) use ($request) {
             $query->where('title', 'like', '%'.$request->search.'%');
         });
-        $paginator = Study::cursorPaginate(15);
+        $paginator = $model->cursorPaginate(15);
 
         return view('study.index', [
             'paginate' => [

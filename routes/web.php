@@ -5,23 +5,17 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DzikirController;
 use App\Http\Controllers\FilesystemBuildController;
+use App\Http\Controllers\FiqihController;
 use App\Http\Controllers\HadistController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MosqueeContactController;
 use App\Http\Controllers\MosqueeController;
-use App\Http\Controllers\MosqueeFollowerController;
 use App\Http\Controllers\MosqueeImageController;
-use App\Http\Controllers\MosqueeSharedController;
 use App\Http\Controllers\MurottalController;
 use App\Http\Controllers\StudyController;
-use App\Models\Hadist;
 use Illuminate\Support\Facades\Route;
-use App\Models\Mosquee;
-use App\Models\MosqueeFollower;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,8 +36,13 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('category', CategoryController::class);
     Route::resource('study', StudyController::class);
     Route::resource('murottal', MurottalController::class);
+    Route::prefix('mosquee/{mosquee}')->name('mosquee.')->group(function () {
+        Route::resource('contact', MosqueeContactController::class);
+        Route::resource('gallery', MosqueeImageController::class);
+    });
     Route::resource('hadist', HadistController::class);
     Route::resource('dzikir', DzikirController::class);
+    Route::resource('fiqih', FiqihController::class);
 
     Route::post('ckupload', function (Request $request) {
         $originName = $request->file('upload')->getClientOriginalName();

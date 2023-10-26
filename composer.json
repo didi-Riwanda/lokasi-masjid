@@ -15,6 +15,7 @@
         "laravel/tinker": "^2.8",
         "php-ffmpeg/php-ffmpeg": "^1.1",
         "ramsey/uuid": "^4.7",
+        "spatie/laravel-image-optimizer": "^1.7",
         "yajra/laravel-datatables-oracle": "^10.8"
     },
     "require-dev": {

@@ -3,9 +3,9 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class FiqihResource extends JsonResource
+class FiqihResource extends ResourceCollection
 {
     /**
      * Transform the resource into an array.
@@ -14,6 +14,13 @@ class FiqihResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'data' => $this->collection->map(function ($row) {
+                return [
+                    'title' => $row->title,
+                    'source' => $row->source,
+                ];
+            }),
+        ];
     }
 }
