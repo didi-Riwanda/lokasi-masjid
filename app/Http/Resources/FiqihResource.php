@@ -18,7 +18,7 @@ class FiqihResource extends ResourceCollection
             'data' => $this->collection->map(function ($row) {
                 return [
                     'title' => $row->title,
-                    'source' => $row->source,
+                    'source' => route('document.url', ['path' => $row->source]),
                 ];
             }),
         ];

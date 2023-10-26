@@ -40,10 +40,10 @@
                                 <td>{{ $item['title'] }}</td>
                                 <td>{{ $item['source'] }}</td>
                                 <td>
-                                    <a href="{{ route('fiqih.edit', ['hadist' => $item['uuid']]) }}" class="btn btn-warning">
+                                    <a href="{{ route('fiqih.edit', ['fiqih' => $item['uuid']]) }}" class="btn btn-warning">
                                         Ubah
                                     </a>
-                                    <form action="{{ route('fiqih.destroy', ['hadist' => $item['uuid']]) }}" method="post">
+                                    <form action="{{ route('fiqih.destroy', ['fiqih' => $item['uuid']]) }}" method="post">
                                         @csrf
                                         @method('delete')
 

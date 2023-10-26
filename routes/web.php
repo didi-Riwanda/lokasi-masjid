@@ -70,6 +70,9 @@ Route::prefix('image')->name('image.')->group(function () {
 Route::prefix('audio')->name('audio.')->group(function () {
     Route::get('/{path}', [FilesystemBuildController::class, 'audio'])->where('path', '(.*)')->name('url');
 });
+Route::prefix('document')->name('document.')->group(function () {
+    Route::get('/{path}', [FilesystemBuildController::class, 'document'])->where('path', '(.*)')->name('url');
+});
 
 Route::get('/create/user', function () {
     User::create([

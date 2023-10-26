@@ -42,4 +42,16 @@ class FilesystemBuildController extends Controller
         $response = $response->header('Content-Length', $size);
         return $response;
     }
+
+    public function document($path)
+    {
+        if (! Storage::exists($path)) {
+            return response()->json(['message' => 'Document not found.'], 404);
+        }
+
+        $file = Storage::get($path);
+        $type = Storage::mimeType($path);
+
+        return response($file)->header('Content-type', $type);
+    }
 }

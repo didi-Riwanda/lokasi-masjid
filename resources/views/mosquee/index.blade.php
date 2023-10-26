@@ -57,6 +57,9 @@
                                     <a href="{{ route('mosquee.gallery.index', ['mosquee' => $item['uuid']]) }}" class="btn btn-warning">
                                         Galeri
                                     </a>
+                                    <a href="{{ route('mosquee.schedule.index', ['mosquee' => $item['uuid']]) }}" class="btn btn-warning">
+                                        Galeri
+                                    </a>
                                     <form action="{{ route('mosquee.destroy', ['mosquee' => $item['uuid']]) }}" method="post">
                                         @csrf
                                         @method('delete')

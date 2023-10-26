@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\DzikirController;
+use App\Http\Controllers\Api\FiqihController;
 use App\Http\Controllers\Api\HadistController;
 use App\Http\Controllers\Api\MosqueeController;
 use App\Http\Controllers\Api\MurottalController;
@@ -52,4 +53,7 @@ Route::prefix('murottal')->group(function () {
     Route::get('/', [MurottalController::class, 'index']);
     Route::get('/qaris', [MurottalController::class, 'qaris']);
     Route::get('/{murottal}', [MurottalController::class, 'show']);
+});
+Route::prefix('fiqih')->group(function () {
+    Route::get('/', [FiqihController::class, 'index']);
 });
