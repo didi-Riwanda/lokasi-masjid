@@ -11,6 +11,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MosqueeContactController;
 use App\Http\Controllers\MosqueeController;
 use App\Http\Controllers\MosqueeImageController;
+use App\Http\Controllers\MosqueeScheduleController;
 use App\Http\Controllers\MurottalController;
 use App\Http\Controllers\StudyController;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('mosquee/{mosquee}')->name('mosquee.')->group(function () {
         Route::resource('contact', MosqueeContactController::class);
         Route::resource('gallery', MosqueeImageController::class);
+        Route::resource('schedule', MosqueeScheduleController::class);
     });
     Route::resource('hadist', HadistController::class);
     Route::resource('dzikir', DzikirController::class);
