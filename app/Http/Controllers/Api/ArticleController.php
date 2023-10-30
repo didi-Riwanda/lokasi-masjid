@@ -20,7 +20,7 @@ class ArticleController extends Controller
             'imgsrc',
             'created_at',
         ];
-        $model = Article::select($fields);
+        $model = Article::select($fields)->latest();
         return ArticleResource::make($model->cursorPaginate(20));
     }
 
