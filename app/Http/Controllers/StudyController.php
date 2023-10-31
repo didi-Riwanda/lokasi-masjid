@@ -66,6 +66,7 @@ class StudyController extends Controller
             $study = Study::create([
                 'title' => $request->title,
                 'url' => $request->media,
+                'ustadz' => $request->ustadz,
             ]);
             $category = Category::where('uuid', $request->category)->first();
             if (! empty($category)) {
@@ -99,6 +100,7 @@ class StudyController extends Controller
                 'title' => $study->title,
                 'category' => optional($category)->uuid,
                 'url' => $study->url,
+                'ustadz' => $study->ustadz,
             ],
         ]);
     }
@@ -112,6 +114,7 @@ class StudyController extends Controller
             $study->update([
                 'title' => $request->title,
                 'url' => $request->media,
+                'ustadz' => $request->ustadz,
             ]);
 
             $category = Category::where('uuid', $request->category)->first();

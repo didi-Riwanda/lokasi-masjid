@@ -53,6 +53,22 @@
                     </div>
                 </div>
 
+                <div class="row mb-3">
+                    <label for="ustadz" class="col-md-4 col-form-label text-md-end">
+                        Ustadz
+                    </label>
+
+                    <div class="col-md-8">
+                        <input id="ustadz" type="text" class="form-control @error('ustadz') is-invalid @enderror" name="ustadz" value="{{ old('ustadz') }}" required autocomplete="off">
+
+                        @error('ustadz')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+
                 <div class="mb-3">
                     <label class="col-form-label text-md-end">
                         Media Playlist (DEMO - Read Only)
