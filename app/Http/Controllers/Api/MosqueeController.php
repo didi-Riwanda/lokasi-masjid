@@ -28,6 +28,7 @@ class MosqueeController extends Controller
         ];
         $search = $request->q;
         $coditional = isset($search) && ! empty($search) && preg_match($pattern, $search);
+        $melocated = ! empty($coordinates['lat']) && ! empty($coordinates['lng']);
 
         if (! empty($coordinates['lat']) && ! empty($coordinates['lng'])) {
             $fields[] = DB::raw('
@@ -55,9 +56,11 @@ class MosqueeController extends Controller
             // }
             $search = new SmartSearch($search, 'name');
             $model->where($search->getBuilderFilter());
-        })->latest();
-        if (! empty($coordinates['lat']) && ! empty($coordinates['lng'])) {
+        });
+        if ($coditional && strlen($search) < 250 && $melocated) {
             $model = $model->orderBy('distance', 'asc');
+        } else {
+            $model = $model->latest();
         }
         return MosqueeResource::make($model->cursorPaginate(100));
     }
