@@ -1,11 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Masjid')
+@section('title', 'Masjid Jadwal')
 
 @section('breadcrumb')
     <ol class="breadcrumb float-sm-right">
         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-        <li class="breadcrumb-item active">Masjid</li>
+        <li class="breadcrumb-item"><a href="{{ route('mosquee.index') }}">Masjid</a></li>
+        <li class="breadcrumb-item active">Masjid Jadwal</li>
     </ol>
 @endsection
 
@@ -15,13 +16,13 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h3 class="card-title">Daftar Masjid</h3>
 
-                <a href="{{ route('mosquee.create') }}" class="btn btn-secondary btn-sm">Tambah</a>
+                <a href="{{ route('mosquee.schedule.create', ['mosquee' => $mosquee->uuid]) }}" class="btn btn-secondary btn-sm">Tambah</a>
             </div>
         </div>
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div></div>
-                <form action="{{ route('mosquee.index') }}">
+                <form action="{{ route('mosquee.schedule.index', ['mosquee' => $mosquee->uuid]) }}">
                     <input type="search" class="form-control" name="search" placeholder="Search">
                 </form>
             </div>
@@ -29,38 +30,23 @@
                 <table id="table1" class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th>Nama</th>
-                            <th>Alamat</th>
-                            <th>Jalan</th>
-                            <th>Kecamatan</th>
-                            <th>Kota / Kabupaten</th>
-                            <th>Provinsi</th>
+                            <th>Judul</th>
+                            <th>Pembicara</th>
+                            <th>Mulai</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($paginate['data'] as $item)
                             <tr>
-                                <td>{{ $item['name'] }}</td>
-                                <td>{{ $item['address'] }}</td>
-                                <td>{{ $item['street'] }}</td>
-                                <td>{{ $item['district'] }}</td>
-                                <td>{{ $item['city'] }}</td>
-                                <td>{{ $item['province'] }}</td>
+                                <td>{{ $item['title'] }}</td>
+                                <td>{{ $item['speakers'] }}</td>
+                                <td>{{ $item['start_time'] }}</td>
                                 <td>
-                                    <a href="{{ route('mosquee.edit', ['mosquee' => $item['uuid']]) }}" class="btn btn-warning">
+                                    <a href="{{ route('mosquee.schedule.edit', ['mosquee' => $mosquee->uuid, 'schedule' => $item['id']]) }}" class="btn btn-warning">
                                         Ubah
                                     </a>
-                                    <a href="{{ route('mosquee.contact.index', ['mosquee' => $item['uuid']]) }}" class="btn btn-warning">
-                                        Kontak
-                                    </a>
-                                    <a href="{{ route('mosquee.gallery.index', ['mosquee' => $item['uuid']]) }}" class="btn btn-warning">
-                                        Galeri
-                                    </a>
-                                    <a href="{{ route('mosquee.schedule.index', ['mosquee' => $item['uuid']]) }}" class="btn btn-warning">
-                                        Schedule
-                                    </a>
-                                    <form action="{{ route('mosquee.destroy', ['mosquee' => $item['uuid']]) }}" method="post">
+                                    <form action="{{ route('mosquee.schedule.destroy', ['mosquee' => $mosquee->uuid, 'schedule' => $item['id']]) }}" method="post">
                                         @csrf
                                         @method('delete')
 

@@ -76,10 +76,10 @@ Route::prefix('document')->name('document.')->group(function () {
     Route::get('/{path}', [FilesystemBuildController::class, 'document'])->where('path', '(.*)')->name('url');
 });
 
-Route::get('/create/user', function () {
-    User::create([
-        'email' => 'ayam.goreng@ashiilapp.com',
-        'password' => bcrypt('@Goreng.Ayam891X'),
-        'name' => 'Admin Ashiilapp',
-    ]);
-});
+// Route::get('/create/user', function () {
+//     User::create([
+//         'email' => 'ayam.goreng@ashiilapp.com',
+//         'password' => bcrypt('@Goreng.Ayam891X'),
+//         'name' => 'Admin Ashiilapp',
+//     ]);
+// });

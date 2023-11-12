@@ -77,6 +77,7 @@ class MosqueeController extends Controller
             sin(deg2rad($lat))
         ) * 6378137;
         $images = $mosquee->images()->select('source', 'type')->limit(5)->get();
+        $now = gmdate('Y-m-d H:i');
 
         return [
             'id' => $mosquee->uuid,
@@ -96,6 +97,26 @@ class MosqueeController extends Controller
                 ];
             }, $images->toArray()),
             'contacts' => $mosquee->contacts()->select('name', 'phone', 'type')->limit(9)->get(),
+            'schedules' => $mosquee->schedules()->where(function ($model) use ($mosquee, $now) {
+                $model->where('mosquee_id', $mosquee->id);
+                $model->where(function ($model) use ($now) {
+                    $model->where(function ($model) use ($now) {
+                        $model->where('type', 'dauroh');
+                        $model->where('end_time', '>=', $now);
+                    });
+                    $model->orWhereIn('type', ['kajian', 'tahsin', 'tahfidz']);
+                });
+            })->get()->map(function ($row) {
+                return [
+                    'title' => $row->title,
+                    'speakers' => $row->speakers,
+                    'start_time' => $row->start_time,
+                    'end_time' => $row->end_time,
+                    'day' => $row->day,
+                    'duration' => $row->duration,
+                    'type' => $row->type,
+                ];
+            }),
         ];
     }
 }

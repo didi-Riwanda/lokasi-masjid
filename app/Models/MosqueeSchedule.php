@@ -10,6 +10,12 @@ class MosqueeSchedule extends Model
     use HasFactory;
 
     protected $fillable = [
-        'times',
+        'title',
+        'speakers',
+        'type',
+        'day',
+        'start_time',
+        'end_time',
+        'duration',
     ];
 }
