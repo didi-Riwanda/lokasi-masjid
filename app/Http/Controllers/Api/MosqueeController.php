@@ -57,11 +57,12 @@ class MosqueeController extends Controller
             $search = new SmartSearch($search, 'name');
             $model->where($search->getBuilderFilter());
         });
-        if ($coditional && strlen($search) < 250 && $melocated) {
-            $model = $model->orderBy('distance', 'asc');
-        } else {
-            $model = $model->latest();
-        }
+        // if ($coditional && strlen($search) < 250 && $melocated) {
+        //     $model = $model->orderBy('distance', 'asc');
+        // } else {
+        //     $model = $model->latest();
+        // }
+        $model = $model->orderBy('distance', 'asc');
         return MosqueeResource::make($model->cursorPaginate(100));
     }
 

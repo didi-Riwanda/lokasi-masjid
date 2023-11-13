@@ -161,15 +161,17 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
-        $sources = explode(',', $article->imgsrc);
-        foreach ($sources as $source) {
-            if (Storage::exists($source)) {
-                Storage::delete($source);
+        return DB::transaction(function () use ($article) {
+            $sources = explode(',', $article->imgsrc);
+            foreach ($sources as $source) {
+                if (Storage::exists($source)) {
+                    Storage::delete($source);
+                }
             }
-        }
-        $article->delete();
-        return redirect()->route('article.index')->with([
-            'notification' => 'berhasil menghapus data',
-        ]);
+            $article->delete();
+            return redirect()->route('article.index')->with([
+                'notification' => 'berhasil menghapus data',
+            ]);
+        });
     }
 }
