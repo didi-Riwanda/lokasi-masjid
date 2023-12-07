@@ -21,6 +21,7 @@ class MurottalController extends Controller
             'uuid',
             'title',
             'qari',
+            'src',
             'created_at',
         ]);
         $model = $model->when(! empty($request->search), function ($query) use ($request) {
@@ -30,7 +31,22 @@ class MurottalController extends Controller
 
         return view('murottal.index', [
             'paginate' => [
-                'data' => $paginator->items(),
+                'data' => array_map(function ($row) {
+                    $media = false;
+                    if (! empty($row['src']) && Storage::fileExists($row['src'])) {
+                        $media = true;
+                    }
+                    return [
+                        'id' => $row['id'],
+                        'uuid' => $row['uuid'],
+                        'title' => $row['title'],
+                        'qari' => $row['qari'],
+                        'src' => $row['src'],
+                        'status' => [
+                            'media' => $media,
+                        ],
+                    ];
+                }, $paginator->items()),
                 'meta' => [
                     'count' => $paginator->count(),
                     'next' => optional($paginator->nextCursor())->encode(),

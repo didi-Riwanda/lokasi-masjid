@@ -32,6 +32,7 @@
                             <th>Judul</th>
                             <th>Qari</th>
                             <th>Media</th>
+                            <th>Status Media</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -40,7 +41,8 @@
                             <tr>
                                 <td>{{ $item['title'] }}</td>
                                 <td>{{ $item['qari'] }}</td>
-                                <td>{{ $item['src'] }}</td>
+                                <td><a href="{{ route('audio.url', ['path' => $item['src']]) }}" target="_blank">Dengarkan</a></td>
+                                <td>{{ $item['status']['media'] ? 'Aktif' : 'Tidak Aktif' }}</td>
                                 <td>
                                     <a href="{{ route('murottal.edit', ['murottal' => $item['uuid']]) }}" class="btn btn-warning">
                                         Ubah

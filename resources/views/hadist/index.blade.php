@@ -132,7 +132,7 @@
 
             Toast.fire({
                 icon: 'success',
-                title: '{{ session('notification') }}'
+                title: '{{ session('notification') }}',
             });
         </script>
     @endif
