@@ -26,6 +26,7 @@ class MurottalController extends Controller
         ]);
         $model = $model->when(! empty($request->search), function ($query) use ($request) {
             $query->where('title', 'like', '%'.$request->search.'%');
+            $query->orWhere('qari', 'like', '%'.$request->search.'%');
         });
         $paginator = $model->cursorPaginate(15);
 
