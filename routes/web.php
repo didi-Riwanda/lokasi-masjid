@@ -18,6 +18,7 @@ use App\Models\Article;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,25 +86,29 @@ Route::prefix('document')->name('document.')->group(function () {
 //     ]);
 // });
 
-Route::get('/file/clear', function () {
-    $articles = Article::all();
-    $caches = collect();
-    foreach ($articles as $article) {
-        $caches->add(explode(',', $article->imgsrc));
-    }
+// Route::get('/file/clear', function () {
+//     $articles = Article::all();
+//     $caches = collect();
+//     foreach ($articles as $article) {
+//         $caches->add(explode(',', $article->imgsrc));
+//     }
 
-    $caches = $caches->flatten()->toArray();
-    foreach ($caches as $key => $value) {
-        $caches[$key] = str_replace('articles/', '', $value);
-    }
+//     $caches = $caches->flatten()->toArray();
+//     foreach ($caches as $key => $value) {
+//         $caches[$key] = str_replace('articles/', '', $value);
+//     }
 
-    $path = storage_path('app/articles');
-    $files = scandir($path);
-    unset($files[0], $files[1]);
-    foreach ($files as $file) {
-        $target = $path . '/' . $file;
-        if (is_file($target) && !in_array($file, $caches)) {
-            @unlink($target);
-        }
-    }
+//     $path = storage_path('app/articles');
+//     $files = scandir($path);
+//     unset($files[0], $files[1]);
+//     foreach ($files as $file) {
+//         $target = $path . '/' . $file;
+//         if (is_file($target) && !in_array($file, $caches)) {
+//             @unlink($target);
+//         }
+//     }
+// });
+
+Route::get('/test', function () {
+    dd(storage_path(), Storage::fileExists('murottals/mishari-rashid-al-afasy/bisxB04sSAZSCHc8nPbeGCo04jfyB4BHFsbc7qHj.mp3'));
 });

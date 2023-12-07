@@ -16,8 +16,8 @@ return new class extends Migration
             $table->char('uuid', 36)->index();
             $table->char('title');
             $table->char('source');
-            $table->text('text');
-            $table->text('translation');
+            $table->longText('text');
+            $table->longText('translation');
             $table->char('category');
             $table->longText('noted');
             $table->timestamps();
