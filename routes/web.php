@@ -110,5 +110,6 @@ Route::prefix('document')->name('document.')->group(function () {
 // });
 
 Route::get('/test', function () {
-    dd(storage_path(), Storage::fileExists('murottals/mishari-rashid-al-afasy/bisxB04sSAZSCHc8nPbeGCo04jfyB4BHFsbc7qHj.mp3'));
+    $path = 'murottals/mishari-rashid-al-afasy/bisxB04sSAZSCHc8nPbeGCo04jfyB4BHFsbc7qHj.mp3';
+    dd(storage_path($path), Storage::fileExists('murottals/mishari-rashid-al-afasy/bisxB04sSAZSCHc8nPbeGCo04jfyB4BHFsbc7qHj.mp3'));
 });
