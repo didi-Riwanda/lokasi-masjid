@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateArticleRequest;
+use App\Http\Requests\EditArticleRequest;
 use App\Models\Article;
 use App\Support\Str;
 use Illuminate\Http\Request;
@@ -107,7 +108,7 @@ class ArticleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Article $article)
+    public function update(EditArticleRequest $request, Article $article)
     {
         @ini_set('upload_max_size', '256M');
         @ini_set('post_max_size', '256M');

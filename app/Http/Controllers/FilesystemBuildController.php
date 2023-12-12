@@ -7,10 +7,14 @@ use Illuminate\Support\Facades\Storage;
 
 class FilesystemBuildController extends Controller
 {
-    public function image($path)
+    public function image(Request $request, $path)
     {
         if (! Storage::exists($path)) {
             return response()->json(['message' => 'Image not found.'], 404);
+        }
+
+        if ($request->check && Storage::exists($path)) {
+            return response()->json(['message' => 'Document found']);
         }
 
         $file = Storage::get($path);
@@ -19,10 +23,14 @@ class FilesystemBuildController extends Controller
         return response($file)->header('Content-type', $type);
     }
 
-    public function audio($path)
+    public function audio(Request $request, $path)
     {
         if (! Storage::exists($path)) {
             return response()->json(['message' => 'Audio not found.'], 404);
+        }
+
+        if ($request->check && Storage::exists($path)) {
+            return response()->json(['message' => 'Document found']);
         }
 
         $filename = basename($path);
@@ -43,10 +51,14 @@ class FilesystemBuildController extends Controller
         return $response;
     }
 
-    public function document($path)
+    public function document(Request $request, $path)
     {
         if (! Storage::exists($path)) {
             return response()->json(['message' => 'Document not found.'], 404);
+        }
+
+        if ($request->check && Storage::exists($path)) {
+            return response()->json(['message' => 'Document found']);
         }
 
         $file = Storage::get($path);
