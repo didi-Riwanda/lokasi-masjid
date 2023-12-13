@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateMosqueeGalleryRequest;
 use App\Models\Mosquee;
 use App\Models\MosqueeImage;
 use Illuminate\Http\Request;
@@ -13,10 +14,33 @@ class MosqueeImageController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request, Mosquee $mosquee)
     {
-        return view('mosquee_images.index', [
-            'all_mosquee_images' => MosqueeImage::all()
+        $model = MosqueeImage::select([
+            'id',
+            'source',
+            'type',
+            'created_at',
+        ]);
+        $model = $model->where('mosquee_id', $mosquee->id);
+        $paginator = $model->cursorPaginate(15);
+
+        return view('mosquee.gallery.index', [
+            'paginate' => [
+                'data' => array_map(function ($row) use ($mosquee) {
+                    return [
+                        'id' => $row['id'],
+                        'mosquee' => $mosquee->uuid,
+                        'source' => $row['source'],
+                        'type' => $row['type'],
+                    ];
+                }, $paginator->items()),
+                'meta' => [
+                    'count' => $paginator->count(),
+                    'next' => optional($paginator->nextCursor())->encode(),
+                    'previous' => optional($paginator->previousCursor())->encode(),
+                ],
+            ],
         ]);
     }
 
@@ -25,7 +49,7 @@ class MosqueeImageController extends Controller
      */
     public function create()
     {
-        return view('mosquee_images.create', [
+        return view('mosquee.gallery.create', [
             'mosquee' => Mosquee::all()
         ]);
     }
@@ -33,21 +57,23 @@ class MosqueeImageController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateMosqueeGalleryRequest $request)
     {
-        $validateData = $request->validate([
-            'mosquee_id' => 'required',
-            'source' => 'image|file|max:1024',
-            'type' => 'required'
-        ]);
+        dd($request->images);
+        
+        // $validateData = $request->validate([
+        //     'mosquee_id' => 'required',
+        //     'source' => 'image|file|max:1024',
+        //     'type' => 'required'
+        // ]);
 
-        if($request->file('source')){
-            $validateData['source'] = $request->file('source')->store('mosquee_images');
-        }
+        // if($request->file('source')){
+        //     $validateData['source'] = $request->file('source')->store('mosquee.gallery');
+        // }
 
-        MosqueeImage::create($validateData);
+        // MosqueeImage::create($validateData);
 
-        return redirect()->route('mosquee_images.index')->with('success', 'Successfully');
+        // return redirect()->route('mosquee.gallery.index')->with('success', 'Successfully');
     }
 
     /**
@@ -63,8 +89,8 @@ class MosqueeImageController extends Controller
      */
     public function edit(MosqueeImage $mosquee_image)
     {
-        return view('mosquee_images.edit', [
-            'old_mosquee_images' => $mosquee_image,
+        return view('mosquee.gallery.edit', [
+            'old_mosquee.gallery' => $mosquee_image,
             'all_mosquee' => Mosquee::all(),
         ]);
     }
@@ -84,12 +110,12 @@ class MosqueeImageController extends Controller
             if($request->oldImage){
                 Storage::delete($request->oldImage);
             }
-            $validate['source'] = $request->file('source')->store('mosquee_images');
+            $validate['source'] = $request->file('source')->store('mosquee.gallery');
         }
 
         $mosquee_image->update($validate);
 
-        return redirect()->route('mosquee_images.index')->with('success', 'Successfully');
+        return redirect()->route('mosquee.gallery.index')->with('success', 'Successfully');
     }
 
     /**
@@ -102,7 +128,7 @@ class MosqueeImageController extends Controller
 
             $mosquee_image->delete();
 
-            return redirect()->route('mosquee_images.index')->with('success', 'Successfully');
+            return redirect()->route('mosquee.gallery.index')->with('success', 'Successfully');
         }
     }
 }

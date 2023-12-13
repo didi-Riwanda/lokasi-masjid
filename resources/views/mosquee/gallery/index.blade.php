@@ -1,11 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Fiqih')
+@section('title', 'Masjid')
 
 @section('breadcrumb')
     <ol class="breadcrumb float-sm-right">
         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-        <li class="breadcrumb-item active">Fiqih</li>
+        <li class="breadcrumb-item"><a href="{{ route('mosquee.index') }}">Masjid</a></li>
+        <li class="breadcrumb-item active">Galleri</li>
     </ol>
 @endsection
 
@@ -13,15 +14,15 @@
     <div class="card card-info">
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
-                <h3 class="card-title">Daftar Fiqih</h3>
+                <h3 class="card-title">Daftar Masjid</h3>
 
-                <a href="{{ route('fiqih.create') }}" class="btn btn-secondary btn-sm">Tambah</a>
+                <a href="{{ route('mosquee.gallery.create', ['mosquee' => request()->mosquee]) }}" class="btn btn-secondary btn-sm">Tambah</a>
             </div>
         </div>
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div></div>
-                <form action="{{ route('fiqih.index') }}">
+                <form action="{{ route('mosquee.gallery.index', ['mosquee' => request()->mosquee]) }}">
                     <input type="search" class="form-control" name="search" placeholder="Search">
                 </form>
             </div>
@@ -29,27 +30,27 @@
                 <table id="table1" class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th>Judul</th>
-                            <th>Dokumen</th>
+                            <th>Nama</th>
+                            <th>Alamat</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($paginate['data'] as $item)
                             <tr>
-                                <td>{{ $item['title'] }}</td>
                                 <td>
-                                    @if ($item['source']['found'])
-                                        <a href="{{ route('document.url', ['path' => $item['source']['path']]) }}">Download</a>
+                                    @if (Storage::exists($item['source']))
+                                        <img src="{{ route('image.url', ['path' => $item['source']]) }}" />
                                     @else
-                                        Not found
+                                        Gambar Tidak Ada
                                     @endif
                                 </td>
+                                <td>{{ $item['type'] }}</td>
                                 <td>
-                                    <a href="{{ route('fiqih.edit', ['fiqih' => $item['uuid']]) }}" class="btn btn-warning">
+                                    <a href="{{ route('mosquee.gallery.edit', ['mosquee' => $item['mosquee'], 'gallery' => $item['id']]) }}" class="btn btn-warning">
                                         Ubah
                                     </a>
-                                    <form action="{{ route('fiqih.destroy', ['fiqih' => $item['uuid']]) }}" method="post">
+                                    <form action="{{ route('mosquee.gallery.destroy', ['mosquee' => $item['mosquee'], 'gallery' => $item['id']]) }}" method="post">
                                         @csrf
                                         @method('delete')
 
@@ -61,7 +62,7 @@
                             </tr>
                         @empty
                             <tr class="text-center">
-                                <td colspan="4">Data tidak ditemukan.</td>
+                                <td colspan="6">Data tidak ditemukan.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -76,12 +77,12 @@
 
             <ul class="pagination pagination-sm m-0 ml-auto">
                 <li class="page-item @if (empty($paginate['meta']['previous'])) disabled @endif">
-                    <a class="page-link" href="{{ route('fiqih.index', ['cursor' => $paginate['meta']['previous'], 'search' => request()->search]) }}">
+                    <a class="page-link" href="{{ route('mosquee.gallery.index', ['mosquee' => request()->mosquee, 'cursor' => $paginate['meta']['previous'], 'search' => request()->search]) }}">
                         &laquo;
                     </a>
                 </li>
                 <li class="page-item @if (empty($paginate['meta']['next'])) disabled @endif">
-                    <a class="page-link" href="{{ route('fiqih.index', ['cursor' => $paginate['meta']['next'], 'search' => request()->search]) }}">
+                    <a class="page-link" href="{{ route('mosquee.gallery.index', ['mosquee' => request()->mosquee, 'cursor' => $paginate['meta']['next'], 'search' => request()->search]) }}">
                         &raquo;
                     </a>
                 </li>

@@ -5,8 +5,8 @@
 @section('breadcrumb')
     <ol class="breadcrumb float-sm-right">
         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('mosquee.index') }}">Pengguna</a></li>
-        <li class="breadcrumb-item active">Ubah Pengguna</li>
+        <li class="breadcrumb-item"><a href="{{ route('mosquee.index') }}">Masjid</a></li>
+        <li class="breadcrumb-item active">Ubah Masjid</li>
     </ol>
 @endsection
 

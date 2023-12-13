@@ -26,7 +26,7 @@
                     </label>
 
                     <div class="col-md-8">
-                        <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}" required autocomplete="off">
+                        <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title', $fiqih->title) }}" required autocomplete="off">
 
                         @error('title')
                             <span class="invalid-feedback" role="alert">

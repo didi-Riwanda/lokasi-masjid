@@ -28,7 +28,17 @@ class FiqihController extends Controller
 
         return view('fiqih.index', [
             'paginate' => [
-                'data' => $paginator->items(),
+                'data' => array_map(function ($row) {
+                    return [
+                        'id' => $row['id'],
+                        'uuid' => $row['uuid'],
+                        'title' => $row['title'],
+                        'source' => [
+                            'path' => $row['source'],
+                            'found' => Storage::exists($row['source']),
+                        ],
+                    ];
+                }, $paginator->items()),
                 'meta' => [
                     'count' => $paginator->count(),
                     'next' => optional($paginator->nextCursor())->encode(),
