@@ -47,7 +47,7 @@ class MosqueeImageController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Mosquee $mosquee)
     {
         return view('mosquee.gallery.create', [
             'mosquee' => Mosquee::all()
@@ -57,23 +57,21 @@ class MosqueeImageController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CreateMosqueeGalleryRequest $request)
+    public function store(CreateMosqueeGalleryRequest $request, Mosquee $mosquee)
     {
-        dd($request->images);
-        
-        // $validateData = $request->validate([
-        //     'mosquee_id' => 'required',
-        //     'source' => 'image|file|max:1024',
-        //     'type' => 'required'
-        // ]);
+        if (is_array($request->file('images'))) {
+            $data = [];
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('mosquees/'.$mosquee->uuid.'/galleries');
+                $extension = $image->extension();
+                $mosquee->images()->create([
+                    'source' => $path,
+                    'type' => $extension,
+                ]);
+            }
+        }
 
-        // if($request->file('source')){
-        //     $validateData['source'] = $request->file('source')->store('mosquee.gallery');
-        // }
-
-        // MosqueeImage::create($validateData);
-
-        // return redirect()->route('mosquee.gallery.index')->with('success', 'Successfully');
+        return redirect()->route('mosquee.gallery.index', ['mosquee' => $mosquee->uuid])->with('success', 'Successfully');
     }
 
     /**
@@ -121,14 +119,14 @@ class MosqueeImageController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(MosqueeImage $mosquee_image)
+    public function destroy(Mosquee $mosquee, MosqueeImage $gallery)
     {
-        if($mosquee_image->source){
-            Storage::delete($mosquee_image->source);
+        if($gallery->source){
+            Storage::delete($gallery->source);
 
-            $mosquee_image->delete();
+            $gallery->delete();
 
-            return redirect()->route('mosquee.gallery.index')->with('success', 'Successfully');
+            return redirect()->route('mosquee.gallery.index', ['mosquee' => $mosquee->uuid])->with('success', 'Successfully');
         }
     }
 }
