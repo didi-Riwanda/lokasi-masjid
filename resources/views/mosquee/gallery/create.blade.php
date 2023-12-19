@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Tambah Lokasi Masjid')
+@section('title', 'Tambah Galleri Masjid')
 
 @section('breadcrumb')
     <ol class="breadcrumb float-sm-right">
@@ -14,7 +14,7 @@
 @section('content')
     <div class="card card-info">
         <div class="card-header">
-            <h3 class="card-title">Tambah Lokasi Masjid Baru</h3>
+            <h3 class="card-title">Tambah Galleri Masjid {{ $mosquee->name }}</h3>
         </div>
         <div class="card-body">
             <form action="{{ route('mosquee.gallery.store', ['mosquee' => request()->mosquee]) }}" method="post" enctype="multipart/form-data">

@@ -14,7 +14,7 @@
     <div class="card card-info">
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
-                <h3 class="card-title">Daftar Masjid</h3>
+                <h3 class="card-title">Daftar Galleri Masjid {{ $mosquee->name }}</h3>
 
                 <a href="{{ route('mosquee.gallery.create', ['mosquee' => request()->mosquee]) }}" class="btn btn-secondary btn-sm">Tambah</a>
             </div>
