@@ -27,6 +27,7 @@ class MosqueeImageController extends Controller
         $paginator = $model->cursorPaginate(15);
 
         return view('mosquee.gallery.index', [
+            'mosquee' => $mosquee,
             'paginate' => [
                 'data' => array_map(function ($row) use ($mosquee) {
                     return [
