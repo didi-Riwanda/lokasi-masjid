@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('qari');
             $table->string('src');
+            $table->double('duration')->default(0);
             $table->timestamps();
         });
     }

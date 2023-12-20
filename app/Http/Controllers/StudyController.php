@@ -19,6 +19,7 @@ class StudyController extends Controller
     {
         $model = Study::select([
             'id',
+            'uuid',
             'category_id',
             'title',
             'url',
@@ -27,7 +28,7 @@ class StudyController extends Controller
         $model = $model->when(! empty($request->search), function ($query) use ($request) {
             $query->where('title', 'like', '%'.$request->search.'%');
         });
-        $paginator = Study::cursorPaginate(15);
+        $paginator = $model->cursorPaginate(15);
 
         return view('study.index', [
             'paginate' => [
@@ -65,6 +66,7 @@ class StudyController extends Controller
             $study = Study::create([
                 'title' => $request->title,
                 'url' => $request->media,
+                'ustadz' => $request->ustadz,
             ]);
             $category = Category::where('uuid', $request->category)->first();
             if (! empty($category)) {
@@ -98,6 +100,7 @@ class StudyController extends Controller
                 'title' => $study->title,
                 'category' => optional($category)->uuid,
                 'url' => $study->url,
+                'ustadz' => $study->ustadz,
             ],
         ]);
     }
@@ -111,6 +114,7 @@ class StudyController extends Controller
             $study->update([
                 'title' => $request->title,
                 'url' => $request->media,
+                'ustadz' => $request->ustadz,
             ]);
 
             $category = Category::where('uuid', $request->category)->first();

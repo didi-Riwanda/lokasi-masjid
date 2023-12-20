@@ -12,56 +12,79 @@ class MosqueeContactController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Mosquee $mosquee, Request $request)
     {
-        return view('mosquee_contact.index', [
-            'all_mosquee_contact' => MosqueeContact::all()
+        $model = $mosquee->contacts()->select([
+            'id',
+            'name',
+            'phone',
+            'type',
+            'created_at',
+        ]);
+        $model = $model->when(! empty($request->search), function ($query) use ($request) {
+            $query->where('name', 'like', '%'.$request->search.'%');
+            $query->orWhere('phone', 'like', '%'.$request->search.'%');
+        });
+        $paginator = $model->cursorPaginate(15);
+
+        return view('mosquee.contact.index', [
+            'mosquee' => $mosquee,
+            'paginate' => [
+                'data' => $paginator->items(),
+                'meta' => [
+                    'count' => $paginator->count(),
+                    'next' => optional($paginator->nextCursor())->encode(),
+                    'previous' => optional($paginator->previousCursor())->encode(),
+                ],
+            ],
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Mosquee $mosquee)
     {
-        return view('mosquee_contact.create', [
-            'all_mosquees' => Mosquee::all()
+        return view('mosquee.contact.create', [
+            'mosquee' => $mosquee,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Mosquee $mosquee, Request $request)
     {
-        MosqueeContact::create([
-            'mosquee_id' => $request->input('mosquee_id'),
+        $mosquee->contacts()->create([
             'name' => $request->input('name'),
             'phone' => $request->input('phone'),
-            'type' => $request->input('type') ?? $request->input('phone')
+            'type' => $request->input('type'),
         ]);
 
-        return redirect()->route('mosquee_contact.index')->with('success', 'Successfully');
+        return redirect()->route(
+            'mosquee.contact.index',
+            ['mosquee' => $mosquee->uuid],
+        )->with('success', 'Successfully');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(MosqueeContact $mosquee_contact)
+    public function show(Mosquee $mosquee, MosqueeContact $contact)
     {
         return view('mosquee_contact.show', [
-            'mosquee_contact' => $mosquee_contact
+            'mosquee_contact' => $contact
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(MosqueeContact $mosquee_contact)
+    public function edit(Mosquee $mosquee, MosqueeContact $contact)
     {
-        return view('mosquee_contact.edit', [
-            'old_mosquee_contact' => $mosquee_contact,
-            'all_mosquee' => Mosquee::all()
+        return view('mosquee.contact.edit', [
+            'mosquee' => $mosquee,
+            'contact' => $contact,
         ]);
     }
 
@@ -85,10 +108,14 @@ class MosqueeContactController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(MosqueeContact $mosquee_contact)
+    public function destroy(Mosquee $mosquee, MosqueeContact $contact)
     {
-        $mosquee_contact->delete();
+        $contact = $mosquee->contacts()->find($contact->id);
+        optional($contact)->delete();
 
-        return redirect()->route('mosquee_contact.index')->with('success', 'Berhasil');
+        return redirect()->route(
+            'mosquee.contact.index',
+            ['mosquee' => $mosquee->uuid],
+        )->with('success', 'Berhasil');
     }
 }

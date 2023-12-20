@@ -21,6 +21,7 @@ class MurottalResource extends ResourceCollection
                     'title' => $row->title,
                     'qari' => $row->qari,
                     'source' => route('audio.url', ['path' => $row->src]),
+                    'duration' => $row->duration,
                 ];
             }),
         ];

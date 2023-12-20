@@ -18,6 +18,7 @@ class HadistCategoryResource extends ResourceCollection
             'data' => $this->collection->map(function ($row) {
                 return [
                     'name' => $row->source,
+                    'narator' => $row->category,
                 ];
             }),
         ];

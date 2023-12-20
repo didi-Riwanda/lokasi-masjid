@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Hadist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HadistController extends Controller
 {
@@ -42,7 +43,7 @@ class HadistController extends Controller
      */
     public function create()
     {
-
+        return view('hadist.create');
     }
 
     /**
@@ -50,7 +51,17 @@ class HadistController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return DB::transaction(function () use ($request) {
+            Hadist::create([
+                'title' => $request->title,
+                'source' => $request->source,
+                'text' => $request->text,
+                'translation' => $request->translation,
+                'category' => $request->category,
+                'noted' => $request->noted,
+            ]);
+            return redirect()->route('hadist.index');
+        });
     }
 
     /**
@@ -66,7 +77,9 @@ class HadistController extends Controller
      */
     public function edit(Hadist $hadist)
     {
-        //
+        return view('hadist.edit', [
+            'hadist' => $hadist,
+        ]);
     }
 
     /**
@@ -74,7 +87,17 @@ class HadistController extends Controller
      */
     public function update(Request $request, Hadist $hadist)
     {
-        //
+        return DB::transaction(function () use ($request, $hadist) {
+            $hadist->update([
+                'title' => $request->title,
+                'source' => $request->source,
+                'text' => $request->text,
+                'translation' => $request->translation,
+                'category' => $request->category,
+                'noted' => $request->noted,
+            ]);
+            return redirect()->route('hadist.index');
+        });
     }
 
     /**
@@ -82,6 +105,10 @@ class HadistController extends Controller
      */
     public function destroy(Hadist $hadist)
     {
-        //
+        return DB::transaction(function () use ($hadist) {
+            $hadist->delete();
+
+            return redirect()->route('hadist.index');
+        });
     }
 }

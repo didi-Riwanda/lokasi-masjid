@@ -66,7 +66,7 @@
                     </label>
 
                     <div class="col-md-8">
-                        <textarea id="arabic" class="form-control @error('arabic') is-invalid @enderror" name="arabic" value="{{ old('arabic', $dzikir['arabic']) }}" required autocomplete="off"></textarea>
+                        <textarea id="arabic" class="form-control @error('arabic') is-invalid @enderror" name="arabic" required autocomplete="off">{{ old('arabic', $dzikir['arabic']) }}</textarea>
                         @error('arabic')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -81,7 +81,7 @@
                     </label>
 
                     <div class="col-md-8">
-                        <textarea id="latin" class="form-control @error('latin') is-invalid @enderror" name="latin" value="{{ old('latin', $dzikir['latin']) }}" required autocomplete="off"></textarea>
+                        <textarea id="latin" class="form-control @error('latin') is-invalid @enderror" name="latin" required autocomplete="off">{{ old('latin', $dzikir['latin']) }}</textarea>
                         @error('latin')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -96,7 +96,7 @@
                     </label>
 
                     <div class="col-md-8">
-                        <textarea id="translation" class="form-control @error('translation') is-invalid @enderror" name="translation" value="{{ old('translation', $dzikir['translation']) }}" required autocomplete="off"></textarea>
+                        <textarea id="translation" class="form-control @error('translation') is-invalid @enderror" name="translation" required autocomplete="off">{{ old('translation', $dzikir['translation']) }}</textarea>
                         @error('translation')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -127,7 +127,7 @@
                     </label>
 
                     <div class="col-md-8">
-                        <textarea id="fawaid" class="form-control @error('fawaid') is-invalid @enderror" name="fawaid" value="{{ old('fawaid', $dzikir['fawaid']) }}" required autocomplete="off"></textarea>
+                        <textarea id="fawaid" class="form-control @error('fawaid') is-invalid @enderror" name="fawaid" required autocomplete="off">{{ old('fawaid', $dzikir['fawaid']) }}</textarea>
                         @error('fawaid')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>

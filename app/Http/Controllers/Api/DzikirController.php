@@ -32,7 +32,14 @@ class DzikirController extends Controller
         $model = $model->when($coditional, function($model) use ($search) {
             $search = new SmartSearch($search, 'title|source');
             $model->where($search->getBuilderFilter());
-        })->latest();
+        });
+        $model = $model->when(! empty($request->category), function ($model) use ($request) {
+            $category = Category::where('uuid', $request->category)->first();
+            if (! empty($category)) {
+                $model->where('category_id', $category->id);
+            }
+        });
+        $model = $model->latest();
         return DzikirResource::make($model->cursorPaginate(100));
     }
 
@@ -56,12 +63,17 @@ class DzikirController extends Controller
 
     public function show(Request $request, Dzikir $dzikir)
     {
+        $category = $dzikir->category;
         return [
             'id' => $dzikir->uuid,
             'title' => $dzikir->title,
             'arabic' => $dzikir->arabic,
             'latin' => $dzikir->latin,
             'translation' => $dzikir->translation,
+            'category' => [
+                'id' => $category->uuid,
+                'name' => $category->name,
+            ],
             'notes' => $dzikir->notes,
             'fawaid' => $dzikir->fawaid,
             'source' => $dzikir->source,

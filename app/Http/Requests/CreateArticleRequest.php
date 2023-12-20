@@ -23,7 +23,7 @@ class CreateArticleRequest extends FormRequest
     {
         return [
             'title' => 'required|string',
-            'images' => 'required|array',
+            'images' => 'required|array|min:1',
             'images.*' => 'required|image|max:2048',
             'body' => 'nullable|string',
         ];

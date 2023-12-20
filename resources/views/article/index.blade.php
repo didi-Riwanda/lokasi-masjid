@@ -41,7 +41,15 @@
                         @forelse ($paginate['data'] as $item)
                             <tr>
                                 <td>{{ $item['title'] }}</td>
-                                <td>{{ $item['imgsrc'] }}</td>
+                                <td>
+                                    @php
+                                        $images = array_map(function ($row) {
+                                            $filename = basename($row);
+                                            return '<a href="'.route('image.url', ['path' => $row]).'" target="_blank">'.$filename.'</a>';
+                                        }, explode(',', $item['imgsrc']));
+                                    @endphp
+                                    {!! implode('<br />', $images) !!}
+                                </td>
                                 <td>{{ $item['category'] }}</td>
                                 <td>{{ empty($item['content']) ? 'Poster' : 'Artikel' }}</td>
                                 <td>{{ Str::limit(strip_tags($item['content']), $limit = 125, $end = '...') }}</td>
@@ -76,12 +84,12 @@
 
             <ul class="pagination pagination-sm m-0 ml-auto">
                 <li class="page-item @if (empty($paginate['meta']['previous'])) disabled @endif">
-                    <a class="page-link" href="{{ route('article.index', ['cursor' => $paginate['meta']['previous']]) }}">
+                    <a class="page-link" href="{{ route('article.index', ['cursor' => $paginate['meta']['previous'], 'search' => request()->search]) }}">
                         &laquo;
                     </a>
                 </li>
                 <li class="page-item @if (empty($paginate['meta']['next'])) disabled @endif">
-                    <a class="page-link" href="{{ route('article.index', ['cursor' => $paginate['meta']['next']]) }}">
+                    <a class="page-link" href="{{ route('article.index', ['cursor' => $paginate['meta']['next'], 'search' => request()->search]) }}">
                         &raquo;
                     </a>
                 </li>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Mosquee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
 
 class MosqueeController extends Controller
@@ -17,6 +18,7 @@ class MosqueeController extends Controller
     {
         $model = Mosquee::select([
             'id',
+            'uuid',
             'name',
             'address',
             'street',
@@ -28,7 +30,7 @@ class MosqueeController extends Controller
         $model = $model->when(! empty($request->search), function ($query) use ($request) {
             $query->where('name', 'like', '%'.$request->search.'%');
         });
-        $paginator = Mosquee::cursorPaginate(15);
+        $paginator = $model->cursorPaginate(15);
 
         return view('mosquee.index', [
             'paginate' => [
@@ -132,7 +134,7 @@ class MosqueeController extends Controller
     public function edit(Mosquee $mosquee)
     {
         return view('mosquee.edit', [
-            'old_mosquee' => $mosquee
+            'mosquee' => $mosquee
         ]);
     }
 
@@ -142,24 +144,57 @@ class MosqueeController extends Controller
     public function update(Request $request, Mosquee $mosquee)
     {
         $request->validate([
-            // 'uuid' => 'required',
-            'name' => 'required',
-            'addrees' => 'required|max:350',
-            'street' => 'required',
-            'subdistrict' => 'required',
-            'city' => 'required',
-            'province' => 'required',
-            'latitude' => 'required',
-            'longtitude' => 'required',
-            'followers' => 'required',
-            'shareds' => 'required'
+            'name' => 'required|string',
+            'address' => 'required|string|max:350',
+            'street' => 'required|string',
+            'district' => 'required|string',
+            'city' => 'required|string',
+            'province' => 'required|string',
+            'latitude' => [
+                'required',
+                'numeric',
+                'regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/',
+            ],
+            'longitude' => [
+                'required',
+                'numeric',
+                'regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/',
+            ],
+            'images.*' => 'nullable|mimes:png,jpg,jpeg|max:2048',
         ]);
 
-        $request['uuid'] = Uuid::uuid4();
+        return DB::transaction(function () use ($mosquee, $request) {
+            $mosquee->update($request->only([
+                'name',
+                'address',
+                'street',
+                'district',
+                'city',
+                'province',
+                'latitude',
+                'longitude',
+            ]));
 
-        $mosquee->update($request->all());
+            $images = $request->file('images');
+            if (is_array($images) && ! empty($images)) {
+                foreach ($images as $image) {
+                    if (isset($image) && ! empty($image)) {
+                        $mosquee->images()->create([
+                            'source' => $image->store('mosquees/'.$mosquee->uuid),
+                            'type' => $image->extension(),
+                        ]);
+                    }
+                }
 
-        return redirect()->route('mosquee.index')->with('success', 'Berhasil');
+                foreach ($mosquee->images as $image) {
+                    if (Storage::exists($image->source)) {
+                        Storage::delete($image->source);
+                    }
+                }
+            }
+
+            return redirect()->route('mosquee.index')->with('success', 'Berhasil');
+        });
     }
 
     /**
@@ -167,6 +202,12 @@ class MosqueeController extends Controller
      */
     public function destroy(Mosquee $mosquee)
     {
+        foreach ($mosquee->images as $image) {
+            if (Storage::exists($image->source)) {
+                Storage::delete($image->source);
+            }
+        }
+
         $mosquee->delete();
 
         return redirect()->route('mosquee.index')->with('success', 'Data Berhasil dihapus!');

@@ -14,5 +14,6 @@ class Murottal extends Model
         'title',
         'qari',
         'src',
+        'duration',
     ];
 }

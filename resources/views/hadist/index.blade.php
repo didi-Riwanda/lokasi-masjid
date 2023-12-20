@@ -70,12 +70,12 @@
 
             <ul class="pagination pagination-sm m-0 ml-auto">
                 <li class="page-item @if (empty($paginate['meta']['previous'])) disabled @endif">
-                    <a class="page-link" href="{{ route('hadist.index', ['cursor' => $paginate['meta']['previous']]) }}">
+                    <a class="page-link" href="{{ route('hadist.index', ['cursor' => $paginate['meta']['previous'], 'search' => request()->search]) }}">
                         &laquo;
                     </a>
                 </li>
                 <li class="page-item @if (empty($paginate['meta']['next'])) disabled @endif">
-                    <a class="page-link" href="{{ route('hadist.index', ['cursor' => $paginate['meta']['next']]) }}">
+                    <a class="page-link" href="{{ route('hadist.index', ['cursor' => $paginate['meta']['next'], 'search' => request()->search]) }}">
                         &raquo;
                     </a>
                 </li>
@@ -132,7 +132,7 @@
 
             Toast.fire({
                 icon: 'success',
-                title: '{{ session('notification') }}'
+                title: '{{ session('notification') }}',
             });
         </script>
     @endif

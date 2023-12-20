@@ -35,6 +35,7 @@
                             <th>Kecamatan</th>
                             <th>Kota / Kabupaten</th>
                             <th>Provinsi</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,6 +50,15 @@
                                 <td>
                                     <a href="{{ route('mosquee.edit', ['mosquee' => $item['uuid']]) }}" class="btn btn-warning">
                                         Ubah
+                                    </a>
+                                    <a href="{{ route('mosquee.contact.index', ['mosquee' => $item['uuid']]) }}" class="btn btn-warning">
+                                        Kontak
+                                    </a>
+                                    <a href="{{ route('mosquee.gallery.index', ['mosquee' => $item['uuid']]) }}" class="btn btn-warning">
+                                        Galeri
+                                    </a>
+                                    <a href="{{ route('mosquee.schedule.index', ['mosquee' => $item['uuid']]) }}" class="btn btn-warning">
+                                        Schedule
                                     </a>
                                     <form action="{{ route('mosquee.destroy', ['mosquee' => $item['uuid']]) }}" method="post">
                                         @csrf
@@ -77,12 +87,12 @@
 
             <ul class="pagination pagination-sm m-0 ml-auto">
                 <li class="page-item @if (empty($paginate['meta']['previous'])) disabled @endif">
-                    <a class="page-link" href="{{ route('mosquee.index', ['cursor' => $paginate['meta']['previous']]) }}">
+                    <a class="page-link" href="{{ route('mosquee.index', ['cursor' => $paginate['meta']['previous'], 'search' => request()->search]) }}">
                         &laquo;
                     </a>
                 </li>
                 <li class="page-item @if (empty($paginate['meta']['next'])) disabled @endif">
-                    <a class="page-link" href="{{ route('mosquee.index', ['cursor' => $paginate['meta']['next']]) }}">
+                    <a class="page-link" href="{{ route('mosquee.index', ['cursor' => $paginate['meta']['next'], 'search' => request()->search]) }}">
                         &raquo;
                     </a>
                 </li>

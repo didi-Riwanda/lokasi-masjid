@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\MurottalIndexRequest;
+use App\Http\Requests\Api\MurottalQariRequest;
+use App\Http\Resources\MurottalQariResource;
 use App\Http\Resources\MurottalResource;
 use App\Models\Murottal;
 use FaithFM\SmartSearch\SmartSearch;
@@ -19,6 +21,7 @@ class MurottalController extends Controller
             'title',
             'qari',
             'src',
+            'duration',
             'created_at',
         ];
         $pattern = '/[a-zA-Z0-9 , .]/m';
@@ -26,10 +29,32 @@ class MurottalController extends Controller
         $coditional = ! empty($search) && preg_match($pattern, $search);
 
         $model = Murottal::select($fields);
+        $model = $model->when(! empty($request->qari), function ($model) use ($request) {
+            $model->where('qari', $request->qari);
+        });
         $model = $model->when($coditional, function($model) use ($search) {
             $search = new SmartSearch($search, 'title|qari');
             $model->where($search->getBuilderFilter());
-        })->latest();
-        return MurottalResource::make($model->cursorPaginate(100));
+        });
+        return MurottalResource::make($model->cursorPaginate(150));
+    }
+
+    public function qaris(MurottalQariRequest $request)
+    {
+        $fields = [
+            'id',
+            'qari',
+            'created_at',
+        ];
+        $pattern = '/[a-zA-Z0-9 , .]/m';
+        $search = $request->q ?? $request->search;
+        $coditional = ! empty($search) && preg_match($pattern, $search);
+        $model = Murottal::select($fields);
+        $model = $model->groupBy('qari');
+        $model = $model->when($coditional, function($model) use ($search) {
+            $search = new SmartSearch($search, 'qari');
+            $model->where($search->getBuilderFilter());
+        });
+        return MurottalQariResource::make($model->cursorPaginate(100));
     }
 }

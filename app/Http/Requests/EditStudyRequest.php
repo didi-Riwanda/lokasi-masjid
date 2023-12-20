@@ -28,6 +28,7 @@ class EditStudyRequest extends FormRequest
                 'required',
                 'regex:/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/',
             ],
+            'ustadz' => 'required|string',
         ];
     }
 }

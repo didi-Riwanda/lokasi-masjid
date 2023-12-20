@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('mosquee_schedules', function (Blueprint $table) {
             $table->id();
             $table->foreignId('mosquee_id');
-            $table->dateTime('times');
+            $table->dateTime('start_time');
+            $table->dateTime('end_time');
+            $table->string('day')->nullable();
+            $table->integer('duration');
             $table->string('title')->nullable();
             $table->text('speakers')->nullable();
             $table->string('type');

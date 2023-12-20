@@ -8,8 +8,6 @@ services:
     container_name: ashiilapp-redis
     image: redis:alpine
     restart: unless-stopped
-    # ports:
-    #   - 6379:6379
     networks:
       - ashiilapp
 
@@ -21,8 +19,6 @@ services:
       args:
         - PHPUSER=${PHPUSER:-www-data}
         - PHPGROUP=${PHPGROUP:-www-data}
-    # ports:
-    #   - 9000:9000
     restart: unless-stopped
     volumes:
       - ./:/var/www
@@ -38,6 +34,7 @@ services:
       args:
         - NGINXUSER=${NGINXUSER:-www-data}
         - NGINXGROUP=${NGINXGROUP:-www-data}
+    restart: unless-stopped
     ports:
       - 8000:80
     volumes:

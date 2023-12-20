@@ -122,15 +122,15 @@
                 <i class="fas fa-expand-arrows-alt"></i>
             </a>
         </li> --}}
-        {{-- <li class="nav-item">
-            <form action="{{ route('admin.logout') }}" method="post">
+        <li class="nav-item">
+            <form action="{{ route('logout') }}" method="post">
                 @csrf
 
                 <div class="nav-link" href="#" role="button" onclick="onLogout(this)">
                     <i class="fas fa-power-off"></i>
                 </div>
             </form>
-        </li> --}}
+        </li>
     </ul>
 </nav>
 

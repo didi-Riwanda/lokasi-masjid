@@ -32,6 +32,7 @@
                             <th>Judul</th>
                             <th>Qari</th>
                             <th>Media</th>
+                            <th>Status Media</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -40,7 +41,8 @@
                             <tr>
                                 <td>{{ $item['title'] }}</td>
                                 <td>{{ $item['qari'] }}</td>
-                                <td>{{ $item['src'] }}</td>
+                                <td><a href="{{ route('audio.url', ['path' => $item['src']]) }}" target="_blank">Dengarkan</a></td>
+                                <td>{{ $item['status']['media'] ? 'Aktif' : 'Tidak Aktif' }}</td>
                                 <td>
                                     <a href="{{ route('murottal.edit', ['murottal' => $item['uuid']]) }}" class="btn btn-warning">
                                         Ubah
@@ -72,12 +74,12 @@
 
             <ul class="pagination pagination-sm m-0 ml-auto">
                 <li class="page-item @if (empty($paginate['meta']['previous'])) disabled @endif">
-                    <a class="page-link" href="{{ route('murottal.index', ['cursor' => $paginate['meta']['previous']]) }}">
+                    <a class="page-link" href="{{ route('murottal.index', ['cursor' => $paginate['meta']['previous'], 'search' => request()->search]) }}">
                         &laquo;
                     </a>
                 </li>
                 <li class="page-item @if (empty($paginate['meta']['next'])) disabled @endif">
-                    <a class="page-link" href="{{ route('murottal.index', ['cursor' => $paginate['meta']['next']]) }}">
+                    <a class="page-link" href="{{ route('murottal.index', ['cursor' => $paginate['meta']['next'], 'search' => request()->search]) }}">
                         &raquo;
                     </a>
                 </li>

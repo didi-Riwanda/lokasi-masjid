@@ -13,6 +13,7 @@ class Study extends Model
     protected $fillable = [
         'title',
         'url',
+        'ustadz',
     ];
 
     public function category()
