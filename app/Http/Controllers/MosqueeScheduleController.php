@@ -18,8 +18,11 @@ class MosqueeScheduleController extends Controller
         $model = $mosquee->schedules()->select([
             'id',
             'start_time',
+            'end_time',
             'duration',
+            'day',
             'title',
+            'type',
             'speakers',
             'created_at',
         ]);

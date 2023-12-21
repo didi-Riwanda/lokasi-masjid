@@ -32,16 +32,20 @@
                         <tr>
                             <th>Judul</th>
                             <th>Pembicara</th>
+                            <th>Jenis</th>
                             <th>Mulai</th>
+                            <th>Selesai</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($paginate['data'] as $item)
                             <tr>
-                                <td>{{ $item['title'] }}</td>
-                                <td>{{ $item['speakers'] }}</td>
-                                <td>{{ $item['start_time'] }}</td>
+                                <td>{{ $item['type'] === 'tahsin' ? '-' : $item['title'] }}</td>
+                                <td>{{ $item['type'] === 'tahsin' ? '-' : $item['speakers'] }}</td>
+                                <td>{{ $item['type'] }}</td>
+                                <td>{{ \Illuminate\Support\Carbon::parse($item['start_time'])->format('H:i') }}</td>
+                                <td>{{ \Illuminate\Support\Carbon::parse($item['end_time'])->format('H:i') }}</td>
                                 <td>
                                     <a href="{{ route('mosquee.schedule.edit', ['mosquee' => $mosquee->uuid, 'schedule' => $item['id']]) }}" class="btn btn-warning">
                                         Ubah
