@@ -263,9 +263,9 @@
         });
 
         @if (in_array($schedule->type, ['tahfidz', 'tahsin']))
-            $('input[name="title"]').attr({
+            {{-- $('input[name="title"]').attr({
                 disabled: true,
-            });
+            }); --}}
             $('input[name="speakers"]').attr({
                 disabled: true,
             });
@@ -281,16 +281,16 @@
             const id = target.id;
 
             if (boxes.includes(id) && ['checkboxSuccess2', 'checkboxSuccess3'].includes(id)) {
-                $('input[name="title"]').attr({
+                {{-- $('input[name="title"]').attr({
                     disabled: true,
-                });
+                }); --}}
                 $('input[name="speakers"]').attr({
                     disabled: true,
                 });
             } else {
-                $('input[name="title"]').attr({
+                {{-- $('input[name="title"]').attr({
                     disabled: false,
-                });
+                }); --}}
                 $('input[name="speakers"]').attr({
                     disabled: false,
                 });
