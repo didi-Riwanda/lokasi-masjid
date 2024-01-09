@@ -22,13 +22,13 @@
                 <div class="row mb-3">
                     <div class="col-md-12">
                         @php
-                            $categories = \App\Models\Hadist::groupBy('category')->orderBy('ordered')->get();
+                            $categories = \App\Models\Hadist::select(['category', DB::raw('count(*) as total')])->groupBy('category')->orderBy('ordered')->get();
                         @endphp
                         <ul class="list-group sorters">
                             @foreach ($categories as $category)
                                 <li class="list-group-item d-flex justify-content-between align-items-center" data-id="{{ $category->category }}">
                                     {{ $category->category }}
-                                    <span class="badge badge-primary badge-pill">14</span>
+                                    <span class="badge badge-primary badge-pill">{{ $category->total }}</span>
 
                                     <input type="hidden" name="categories[]" readonly value="{{ $category->category }}" />
                                 </li>
