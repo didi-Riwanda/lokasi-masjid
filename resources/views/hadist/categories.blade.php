@@ -27,7 +27,7 @@
                         <ul class="list-group sorters">
                             @foreach ($categories as $category)
                                 <li class="list-group-item d-flex justify-content-between align-items-center" data-id="{{ $category->category }}">
-                                    {{ $category->category }}
+                                    [{{ $category->source }}] {{ $category->category }}
                                     <span class="badge badge-primary badge-pill">{{ $category->total }}</span>
 
                                     <input type="hidden" name="categories[]" readonly value="{{ $category->category }}" />
