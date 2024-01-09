@@ -41,6 +41,7 @@ class HadistController extends Controller
         $model = $model->when(isset($category) && ! empty($category), function ($model) use ($category) {
             $model->where('source', 'like', '%'.$category.'%');
         });
+        $model = $model->orderBy('ordered', 'asc');
         $model = $model->orderBy('id', 'asc');
         $model = $model->orderBy('created_at', 'asc');
         return HadistChapterResource::make($model->cursorPaginate(100));

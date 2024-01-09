@@ -111,4 +111,19 @@ class HadistController extends Controller
             return redirect()->route('hadist.index');
         });
     }
+
+    public function chapters(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            $categories = $request->categories ?? [];
+            foreach ($categories as $index => $category) {
+                $order = $index + 1;
+                Hadist::where('category', $category)->update([
+                    'ordered' => $order,
+                ]);
+            }
+        }
+
+        return view('hadist.chapters');
+    }
 }
