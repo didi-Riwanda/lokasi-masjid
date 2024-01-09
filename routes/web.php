@@ -46,8 +46,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('study', StudyController::class);
     Route::resource('murottal', MurottalController::class);
     Route::prefix('hadist')->name('hadist.')->group(function () {
-        Route::get('/chapters', [HadistController::class, 'chapters']);
-        Route::post('/chapters', [HadistController::class, 'chapters']);
+        Route::get('/categories', [HadistController::class, 'categories']);
+        Route::post('/categories', [HadistController::class, 'categories']);
     });
     Route::resource('hadist', HadistController::class);
     Route::resource('dzikir', DzikirController::class);

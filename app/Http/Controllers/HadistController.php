@@ -112,7 +112,7 @@ class HadistController extends Controller
         });
     }
 
-    public function chapters(Request $request)
+    public function categories(Request $request)
     {
         if ($request->isMethod('post')) {
             $categories = $request->categories ?? [];
@@ -124,6 +124,6 @@ class HadistController extends Controller
             }
         }
 
-        return view('hadist.chapters');
+        return view('hadist.categories');
     }
 }
