@@ -48,6 +48,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('hadist')->name('hadist.')->group(function () {
         Route::get('/categories', [HadistController::class, 'categories']);
         Route::post('/categories', [HadistController::class, 'categories']);
+        Route::delete('/categories', [HadistController::class, 'categories']);
     });
     Route::resource('hadist', HadistController::class);
     Route::resource('dzikir', DzikirController::class);

@@ -28,7 +28,13 @@
                             @foreach ($categories as $category)
                                 <li class="list-group-item d-flex justify-content-between align-items-center" data-id="{{ $category->category }}">
                                     [{{ $category->source }}] {{ $category->category }}
-                                    <span class="badge badge-primary badge-pill">{{ $category->total }}</span>
+                                    <div>
+                                        <span class="badge badge-primary badge-pill">{{ $category->total }}</span>
+                                        &nbsp;
+                                        <button type="button" class="btn btn-sm btn-danger delete">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </div>
 
                                     <input type="hidden" name="categories[]" readonly value="{{ $category->category }}" />
                                 </li>
@@ -52,6 +58,8 @@
 @endpush
 
 @push('windowbody')
+    <!-- Axios -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.min.js"></script>
     <!-- SortableJS -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js"></script>
@@ -74,5 +82,31 @@
             $('#sorting').val($('.sorters').sortable('toArray').join('#|#'));
         }
         update();
+
+
+        let loading = false;
+        $('.delete').on('click', function(e) {
+            if (!loading) {
+                loading = true;
+
+                const target = e.currentTarget;
+                const parent = target.parentElement.parentElement;
+                const category = parent.getAttribute('data-id');
+                axios.delete('{{ url('/hadist/categories') }}', {
+                    params: {
+                        category: category,
+                    },
+                }).then(function(res) {
+                    loading = false;
+
+                    if (res.status == 200 && res.data['result'] == 'success') {
+                    }
+
+                    window.location.reload();
+                }).catch(function(e) {
+                    loading = false;
+                });
+            }
+        });
     </script>
 @endpush

@@ -122,6 +122,17 @@ class HadistController extends Controller
                     'ordered' => $order,
                 ]);
             }
+        } else if ($request->isMethod('delete')) {
+            $category = $request->category;
+            if (! empty($category)) {
+                Hadist::where('category', $category)->delete();
+                return response()->json([
+                    'result' => 'success',
+                ]);
+            }
+            return response()->json([
+                'result' => 'fail',
+            ]);
         }
 
         return view('hadist.categories');
