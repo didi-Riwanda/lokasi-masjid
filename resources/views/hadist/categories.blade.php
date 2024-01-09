@@ -22,7 +22,7 @@
                 <div class="row mb-3">
                     <div class="col-md-12">
                         @php
-                            $categories = \App\Models\Hadist::select(['category', DB::raw('count(*) as total')])->groupBy('category')->orderBy('ordered')->get();
+                            $categories = \App\Models\Hadist::select(['category', 'source', DB::raw('count(*) as total')])->groupBy('category')->orderBy('ordered')->get();
                         @endphp
                         <ul class="list-group sorters">
                             @foreach ($categories as $category)
