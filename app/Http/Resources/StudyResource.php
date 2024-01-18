@@ -24,6 +24,7 @@ class StudyResource extends ResourceCollection
                         'name' => optional($row->category)->name,
                     ],
                     'url' => $row->url,
+                    'thumbnails' => json_decode($row->thumbnails),
                 ];
             }),
         ];
