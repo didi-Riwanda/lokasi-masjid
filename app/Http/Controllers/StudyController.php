@@ -69,7 +69,7 @@ class StudyController extends Controller
                 'title' => $request->title,
                 'url' => $request->media,
                 'ustadz' => $request->ustadz,
-                'thumbnails' => json_encode($info->snippet->thumbails),
+                'thumbnails' => json_encode($info->snippet->thumbnails),
             ]);
             $category = Category::where('uuid', $request->category)->first();
             if (! empty($category)) {
@@ -124,7 +124,7 @@ class StudyController extends Controller
                 $info = Youtube::getVideoInfo($vid);
 
                 $study->url = $request->media;
-                $study->thumbnails = json_encode($info->snippet->thumbails);
+                $study->thumbnails = json_encode($info->snippet->thumbnails);
                 $study->save();
             }
 

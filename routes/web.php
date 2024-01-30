@@ -1,5 +1,6 @@
 <?php
 
+use Alaouy\Youtube\Facades\Youtube;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\MosqueeScheduleController;
 use App\Http\Controllers\MurottalController;
 use App\Http\Controllers\StudyController;
 use App\Models\Article;
+use App\Models\Study;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -31,6 +33,21 @@ use Illuminate\Support\Facades\Storage;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get('/testing', function () {
+    $studies = Study::whereNotNull('thumbnails')->get();
+    foreach ($studies as $study) {
+        $vid = Youtube::parseVidFromURL($study->url);
+        $info = Youtube::getVideoInfo($vid);
+
+        if (isset($info->snippet->thumbnails)) {
+            $study->thumbnails = json_encode($info->snippet->thumbnails);
+            $study->save();
+        } else {
+            dd($info->snippet->thumbnails);
+        }
+    }
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
