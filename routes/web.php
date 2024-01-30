@@ -34,21 +34,6 @@ use Illuminate\Support\Facades\Storage;
 |
 */
 
-Route::get('/testing', function () {
-    $studies = Study::all();
-    foreach ($studies as $study) {
-        $vid = Youtube::parseVidFromURL($study->url);
-        $info = Youtube::getVideoInfo($vid);
-
-        if (isset($info->snippet->thumbnails)) {
-            $study->thumbnails = json_encode($info->snippet->thumbnails);
-            $study->save();
-        } else {
-            dd($info->snippet->thumbnails);
-        }
-    }
-});
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 

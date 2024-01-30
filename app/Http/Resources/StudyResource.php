@@ -16,7 +16,6 @@ class StudyResource extends ResourceCollection
     {
         return [
             'data' => $this->collection->map(function ($row) {
-                dd(($row->thumbnails));
                 return [
                     'id' => $row->uuid,
                     'title' => $row->title,
@@ -25,7 +24,7 @@ class StudyResource extends ResourceCollection
                         'name' => optional($row->category)->name,
                     ],
                     'url' => $row->url,
-                    'thumbnails' => json_decode($row->thumbnails),
+                    'thumbnails' => json_decode($row->thumbnails) ?? [],
                 ];
             }),
         ];
