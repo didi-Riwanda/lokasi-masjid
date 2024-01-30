@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Storage;
 */
 
 Route::get('/testing', function () {
-    $studies = Study::whereNotNull('thumbnails')->get();
+    $studies = Study::whereNull('thumbnails')->get();
     foreach ($studies as $study) {
         $vid = Youtube::parseVidFromURL($study->url);
         $info = Youtube::getVideoInfo($vid);
