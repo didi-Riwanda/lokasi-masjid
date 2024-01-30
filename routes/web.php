@@ -40,12 +40,13 @@ Route::get('/testing', function () {
         $vid = Youtube::parseVidFromURL($study->url);
         $info = Youtube::getVideoInfo($vid);
 
-        if (isset($info->snippet->thumbnails)) {
-            $study->thumbnails = json_encode($info->snippet->thumbnails);
-            $study->save();
-        } else {
-            dd($info->snippet->thumbnails);
-        }
+        dd($study);
+        // if (isset($info->snippet->thumbnails)) {
+        //     $study->thumbnails = json_encode($info->snippet->thumbnails);
+        //     $study->save();
+        // } else {
+        //     dd($info->snippet->thumbnails);
+        // }
     }
 });
 
