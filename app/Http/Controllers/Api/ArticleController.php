@@ -33,7 +33,9 @@ class ArticleController extends Controller
         $model = $model->when(! empty($request->category), function ($model) use ($request) {
             $model->where('category_id', $request->category);
         });
+        $model = $model->whereBetween('created_at', [now()->subMonths(2), now()]);
         $model = $model->latest();
+        // dd($model->toSql(), $times);
         return ArticleResource::make($model->cursorPaginate(20));
     }
 

@@ -41,9 +41,17 @@
                     </label>
 
                     <div class="col-md-8">
-                        <div class="custom-file @error('source') is-invalid @enderror">
-                            <input type="file" name="source" class="custom-file-input" id="source">
-                            <label class="custom-file-label" for="source">Choose file</label>
+                        <div class="input-group @error('source') is-invalid @enderror">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <input type="checkbox" aria-label="Checkbox for following text input" onchange="onChangeMedia(event)">
+                                </div>
+                            </div>
+                            
+                            <div class="custom-file">
+                                <input type="file" name="source" class="custom-file-input" id="source">
+                                <label class="custom-file-label" for="source">Choose file</label>
+                            </div>
                         </div>
 
                         @error('source.')
@@ -67,5 +75,55 @@
     <script src="{{ asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
     <script>
         bsCustomFileInput.init();
+
+        function onChangeMedia(e) {
+            const target = e.currentTarget ?? e.target;
+            const current = target.parentElement.parentElement;
+            const parent = current.parentElement;
+
+            let child;
+            if (target.checked) {
+                child = `
+                    <input type="text" name="source" class="form-control" id="source" placeholder="Kode Google Drive">
+                `;
+                
+               const prefixhttp = `
+                    <div class="input-group-text">
+                        https://drive.google.com/file/d/
+                    </div>
+                `;
+                $(prefixhttp).insertAfter(target.parentElement);
+            } else {
+                child = `
+                    <div class="custom-file">
+                        <input type="file" name="source" class="custom-file-input" id="source">
+                        <label class="custom-file-label" for="source">Choose file</label>
+                    </div>
+                `;
+
+                if (target.parentElement.nextElementSibling) {
+                    target.parentElement.nextElementSibling.remove();
+                }
+            }
+
+            current.nextElementSibling.remove();
+
+            const el = $(child);
+            el.insertAfter(current);
+            if (target.checked) {
+                const suffixquery = `
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            /view?usp=sharing
+                        </div>
+                    </div>
+                `;
+                $(suffixquery).insertAfter(el);
+            } else {
+                if (el.next().length > 0) {
+                    el.next().remove();
+                }
+            }
+        }
     </script>
 @endpush
