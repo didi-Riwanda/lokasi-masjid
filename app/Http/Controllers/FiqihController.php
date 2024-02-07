@@ -76,8 +76,8 @@ class FiqihController extends Controller
                 $data['source'] = $request->source->store('/fiqihs');
             } else if (is_string($request->source)) {
                 $source = $request->source;
-                if (Str::contains($source, ['https://drive.google.com/file/d/'])) {
-                    $source = str_replace(['https://drive.google.com/file/d/', '/view?usp=sharing'], '', $source);
+                if (Str::contains($source, ['https://drive.google.com/file/d/', '/view?usp=sharing', '/view?usp=drive_link'])) {
+                    $source = str_replace(['https://drive.google.com/file/d/', '/view?usp=sharing', '/view?usp=drive_link'], '', $source);
                 }
 
                 $data['source'] = str_replace('${code}', $source, 'https://drive.google.com/file/d/${code}/view?usp=sharing');
@@ -124,8 +124,8 @@ class FiqihController extends Controller
                     $fiqih->source = $request->source->store('/fiqihs');
                 } else if (is_string($request->source)) {
                     $source = $request->source;
-                    if (Str::contains($source, ['https://drive.google.com/file/d/'])) {
-                        $source = str_replace(['https://drive.google.com/file/d/', '/view?usp=sharing'], '', $source);
+                    if (Str::contains($source, ['https://drive.google.com/file/d/', '/view?usp=sharing', '/view?usp=drive_link'])) {
+                        $source = str_replace(['https://drive.google.com/file/d/', '/view?usp=sharing', '/view?usp=drive_link'], '', $source);
                     }
 
                     $fiqih->source = str_replace('${code}', $source, 'https://drive.google.com/file/d/${code}/view?usp=sharing');
