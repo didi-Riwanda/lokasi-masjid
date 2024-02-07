@@ -111,4 +111,30 @@ class HadistController extends Controller
             return redirect()->route('hadist.index');
         });
     }
+
+    public function categories(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            $categories = $request->categories ?? [];
+            foreach ($categories as $index => $category) {
+                $order = $index + 1;
+                Hadist::where('category', $category)->update([
+                    'ordered' => $order,
+                ]);
+            }
+        } else if ($request->isMethod('delete')) {
+            $category = $request->category;
+            if (! empty($category)) {
+                Hadist::where('category', $category)->delete();
+                return response()->json([
+                    'result' => 'success',
+                ]);
+            }
+            return response()->json([
+                'result' => 'fail',
+            ]);
+        }
+
+        return view('hadist.categories');
+    }
 }

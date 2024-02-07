@@ -63,7 +63,9 @@ class MosqueeContactController extends Controller
 
         return redirect()->route(
             'mosquee.contact.index',
-            ['mosquee' => $mosquee->uuid],
+            [
+                'mosquee' => $mosquee->uuid,
+            ],
         )->with('success', 'Successfully');
     }
 
@@ -91,18 +93,22 @@ class MosqueeContactController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, MosqueeContact $mosquee_contact)
+    public function update(Request $request, Mosquee $mosquee, MosqueeContact $contact)
     {
         $validate = $request->validate([
-            'mosquee_id' => 'required',
             'name' => 'required',
             'phone' => 'required',
             'type' => 'required'
         ]);
 
-        $mosquee_contact->update($validate);
+        $contact->update($validate);
 
-        return redirect()->route('mosquee_contact.index')->with('success', 'Berhasil');
+        return redirect()->route(
+            'mosquee.contact.index', [
+                'mosquee' => $mosquee->uuid,
+                'contact' => $contact->id,
+            ],
+        )->with('success', 'Berhasil');
     }
 
     /**

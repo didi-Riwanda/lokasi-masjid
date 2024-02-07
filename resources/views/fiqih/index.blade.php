@@ -40,7 +40,7 @@
                                 <td>{{ $item['title'] }}</td>
                                 <td>
                                     @if ($item['source']['found'])
-                                        <a href="{{ route('document.url', ['path' => $item['source']['path']]) }}">Download</a>
+                                        <a href="{{ $item['source']['path'] }}">Download</a>
                                     @else
                                         Not found
                                     @endif

@@ -1,8 +1,10 @@
 <?php
 
+use Alaouy\Youtube\Facades\Youtube;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DonationController;
 use App\Http\Controllers\DzikirController;
 use App\Http\Controllers\FilesystemBuildController;
 use App\Http\Controllers\FiqihController;
@@ -14,11 +16,14 @@ use App\Http\Controllers\MosqueeImageController;
 use App\Http\Controllers\MosqueeScheduleController;
 use App\Http\Controllers\MurottalController;
 use App\Http\Controllers\StudyController;
+use App\Imports\FiqihImport;
 use App\Models\Article;
+use App\Models\Study;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,18 +36,28 @@ use Illuminate\Support\Facades\Storage;
 |
 */
 
+Route::get('/ifiqih', function () {
+    Excel::import(new FiqihImport, storage_path('app/imports/fiqih.csv'));
+    return 'test';
+});
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
     Route::resource('mosquee', MosqueeController::class);
-    Route::resource('article', ArticleController::class);
-    Route::resource('category', CategoryController::class);
-    Route::resource('study', StudyController::class);
-    Route::resource('murottal', MurottalController::class);
     Route::prefix('mosquee/{mosquee}')->name('mosquee.')->group(function () {
         Route::resource('contact', MosqueeContactController::class);
         Route::resource('gallery', MosqueeImageController::class);
         Route::resource('schedule', MosqueeScheduleController::class);
+    });
+    Route::resource('article', ArticleController::class);
+    Route::resource('category', CategoryController::class);
+    Route::resource('study', StudyController::class);
+    Route::resource('murottal', MurottalController::class);
+    Route::prefix('hadist')->name('hadist.')->group(function () {
+        Route::get('/categories', [HadistController::class, 'categories']);
+        Route::post('/categories', [HadistController::class, 'categories']);
+        Route::delete('/categories', [HadistController::class, 'categories']);
     });
     Route::resource('hadist', HadistController::class);
     Route::resource('dzikir', DzikirController::class);
@@ -77,6 +92,8 @@ Route::prefix('audio')->name('audio.')->group(function () {
 Route::prefix('document')->name('document.')->group(function () {
     Route::get('/{path}', [FilesystemBuildController::class, 'document'])->where('path', '(.*)')->name('url');
 });
+
+Route::resource('donation', DonationController::class);
 
 // Route::get('/create/user', function () {
 //     User::create([

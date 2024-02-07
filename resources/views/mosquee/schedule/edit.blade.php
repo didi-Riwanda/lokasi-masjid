@@ -187,7 +187,7 @@
         fetchpriority="high"
         onload="this.onload=null;this.rel='stylesheet'"
         href="{{ asset('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}"
-    >
+    />
     <!-- iCheck for checkboxes and radio inputs -->
     <link
         rel="preload"
@@ -195,7 +195,22 @@
         fetchpriority="high"
         onload="this.onload=null;this.rel='stylesheet'"
         href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}"
-    >
+    />
+    <!-- Select2 -->
+    <link
+        rel="preload"
+        as="style"
+        fetchpriority="high"
+        onload="this.onload=null;this.rel='stylesheet'"
+        href="{{ asset('plugins/select2/css/select2.min.css') }}"
+    />
+    <link
+        rel="preload"
+        as="style"
+        fetchpriority="high"
+        onload="this.onload=null;this.rel='stylesheet'"
+        href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}"
+    />
 @endpush
 
 @push('windowbody')
@@ -205,27 +220,32 @@
     <script src="{{ asset('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
     <!-- Bootstrap Switch -->
     <script src="{{ asset('plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"></script>
+    <!-- Select2 -->
+    <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
 
     <script>
         @php
-            $startTime = \Illuminate\Support\Carbon::parse($schedule->times);
-            $endTime = \Illuminate\Support\Carbon::parse($schedule->times);
+            $times = \Illuminate\Support\Carbon::parse($schedule->start_time);
+            $type = old('type', 'kajian');
+            $whitelist = ['kajian', 'tahsin', 'tahfidz'];
         @endphp
+
+        const whitelist = ['kajian', 'tahsin', 'tahfidz'];
         // Date and time picker
         $('#starttime').datetimepicker({
-            defaultDate: '{{ $startTime->format('Y-m-d H:i') }}',
+            defaultDate: Date.parse('{{ $times->format('Y-m-d H:i:s') }}'),
             icons: {
                 time: 'far fa-clock'
             },
-            format: 'YYYY-MM-DD HH:mm',
-            minDate: moment(),
+            format: whitelist.includes('{{ $type }}') ? 'HH:mm' : 'YYYY-MM-DD HH:mm',
+            minDate: whitelist.includes('{{ $type }}') ? undefined : moment(),
         });
         $('#endtime').datetimepicker({
-            defaultDate: '{{ $endTime->addSeconds($schedule->duration)->format('Y-m-d H:i') }}',
+            defaultDate: Date.parse('{{ $times->addSeconds($schedule->duration)->format('Y-m-d H:i:s') }}'),
             icons: {
                 time: 'far fa-clock'
             },
-            format: 'YYYY-MM-DD HH:mm',
+            format: whitelist.includes('{{ $type }}') ? 'HH:mm' : 'YYYY-MM-DD HH:mm',
             useCurrent: false,
         });
         $('#starttime').on('change.datetimepicker', function (e) {
@@ -236,10 +256,16 @@
             $('#starttime').datetimepicker('maxDate', e.date);
         });
 
+        const eldayselect = $('select[name="day"]').select2({
+            theme: 'bootstrap4',
+            width: '100%',
+            placeholder: '--- NONE ---',
+        });
+
         @if (in_array($schedule->type, ['tahfidz', 'tahsin']))
-            $('input[name="title"]').attr({
+            {{-- $('input[name="title"]').attr({
                 disabled: true,
-            });
+            }); --}}
             $('input[name="speakers"]').attr({
                 disabled: true,
             });
@@ -255,19 +281,33 @@
             const id = target.id;
 
             if (boxes.includes(id) && ['checkboxSuccess2', 'checkboxSuccess3'].includes(id)) {
-                $('input[name="title"]').attr({
+                {{-- $('input[name="title"]').attr({
                     disabled: true,
-                });
+                }); --}}
                 $('input[name="speakers"]').attr({
                     disabled: true,
                 });
             } else {
-                $('input[name="title"]').attr({
+                {{-- $('input[name="title"]').attr({
                     disabled: false,
-                });
+                }); --}}
                 $('input[name="speakers"]').attr({
                     disabled: false,
                 });
+            }
+
+            if (boxes.includes(id) && ['checkboxSuccess1', 'checkboxSuccess2', 'checkboxSuccess3'].includes(id)) {
+                $('#starttime').datetimepicker('format', 'HH:mm');
+                $('#endtime').datetimepicker('format', 'HH:mm');
+            } else {
+                $('#starttime').datetimepicker('format', 'YYYY-MM-DD HH:mm');
+                $('#endtime').datetimepicker('format', 'YYYY-MM-DD HH:mm');
+            }
+
+            if (boxes.includes(id) && ['checkboxSuccess4'].includes(id)) {
+                eldayselect.attr('disabled', true);
+            } else {
+                eldayselect.attr('disabled', false);
             }
         });
     </script>

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->bigInteger('category_id');
             $table->string('title');
             $table->string('url');
+            $table->longText('thumbnails')->nullable();
             $table->string('ustadz');
             $table->timestamps();
         });

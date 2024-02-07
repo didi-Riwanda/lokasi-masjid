@@ -63,10 +63,13 @@ class StudyController extends Controller
     public function store(CreateStudyRequest $request)
     {
         return DB::transaction(function () use ($request) {
+            $vid = Youtube::parseVidFromURL($request->media);
+            $info = Youtube::getVideoInfo($vid);
             $study = Study::create([
                 'title' => $request->title,
                 'url' => $request->media,
                 'ustadz' => $request->ustadz,
+                'thumbnails' => json_encode($info->snippet->thumbnails),
             ]);
             $category = Category::where('uuid', $request->category)->first();
             if (! empty($category)) {
@@ -113,9 +116,17 @@ class StudyController extends Controller
         return DB::transaction(function () use ($request, $study) {
             $study->update([
                 'title' => $request->title,
-                'url' => $request->media,
                 'ustadz' => $request->ustadz,
             ]);
+
+            if ($study->url !== $request->media) {
+                $vid = Youtube::parseVidFromURL($request->media);
+                $info = Youtube::getVideoInfo($vid);
+
+                $study->url = $request->media;
+                $study->thumbnails = json_encode($info->snippet->thumbnails);
+                $study->save();
+            }
 
             $category = Category::where('uuid', $request->category)->first();
             if ($study->category_id !== optional($category)->id) {

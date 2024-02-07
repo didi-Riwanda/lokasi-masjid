@@ -63,7 +63,12 @@ class FilesystemBuildController extends Controller
 
         $file = Storage::get($path);
         $type = Storage::mimeType($path);
+        $size = Storage::fileSize($path);
 
-        return response($file)->header('Content-type', $type);
+        $response = response($file);
+        $response = $response->header('Cache-Control', 'public');
+        $response = $response->header('Content-type', $type);
+        $response = $response->header('Content-Length', $size);
+        return $response;
     }
 }

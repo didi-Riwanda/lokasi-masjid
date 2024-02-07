@@ -23,6 +23,7 @@ class StudyController extends Controller
             'category_id',
             'title',
             'url',
+            'thumbnails',
             'created_at',
         ];
         $pattern = '/[a-zA-Z0-9 , .]/m';

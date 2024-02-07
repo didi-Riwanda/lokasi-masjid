@@ -160,6 +160,7 @@ return [
          * Package Service Providers...
          */
         Alaouy\Youtube\YoutubeServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
         /*
          * Application Service Providers...
