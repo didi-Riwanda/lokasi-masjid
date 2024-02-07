@@ -16,12 +16,14 @@ use App\Http\Controllers\MosqueeImageController;
 use App\Http\Controllers\MosqueeScheduleController;
 use App\Http\Controllers\MurottalController;
 use App\Http\Controllers\StudyController;
+use App\Imports\FiqihImport;
 use App\Models\Article;
 use App\Models\Study;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +35,11 @@ use Illuminate\Support\Facades\Storage;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get('/ifiqih', function () {
+    Excel::import(new FiqihImport, storage_path('app/imports/fiqih.csv'));
+    return 'test';
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
