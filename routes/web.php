@@ -18,6 +18,8 @@ use App\Http\Controllers\MurottalController;
 use App\Http\Controllers\StudyController;
 use App\Imports\FiqihImport;
 use App\Models\Article;
+use App\Models\Hadist;
+use App\Models\HadistSource;
 use App\Models\Study;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
@@ -37,8 +39,21 @@ use Maatwebsite\Excel\Facades\Excel;
 */
 
 Route::get('/ifiqih', function () {
-    Excel::import(new FiqihImport, storage_path('app/imports/fiqih.csv'));
-    return 'test';
+    // Excel::import(new FiqihImport, storage_path('app/imports/fiqih.csv'));
+    // return 'test';
+
+    $container = [];
+
+    $sources = Hadist::select('source')->groupBy('source')->get();
+    foreach ($sources as $source) {
+        $categories = Hadist::select('category')->where('source', $source->source)->groupBy('category')->get();
+        foreach ($categories as $category) {
+            $container[$source->source][] = $category->category;
+        }
+        
+    }
+
+    dd($container);
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -55,9 +70,15 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('study', StudyController::class);
     Route::resource('murottal', MurottalController::class);
     Route::prefix('hadist')->name('hadist.')->group(function () {
-        Route::get('/categories', [HadistController::class, 'categories']);
+        Route::get('/categories', [HadistController::class, 'categories'])->name('categories');
         Route::post('/categories', [HadistController::class, 'categories']);
         Route::delete('/categories', [HadistController::class, 'categories']);
+        Route::get('/narrators', [HadistController::class, 'narrators'])->name('narrators');
+        Route::post('/narrators', [HadistController::class, 'narrators']);
+        Route::delete('/narrators', [HadistController::class, 'narrators']);
+        Route::get('/sources', [HadistController::class, 'sources'])->name('sources');
+        Route::post('/sources', [HadistController::class, 'sources']);
+        Route::delete('/sources', [HadistController::class, 'sources']);
     });
     Route::resource('hadist', HadistController::class);
     Route::resource('dzikir', DzikirController::class);

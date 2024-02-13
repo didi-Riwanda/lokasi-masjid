@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hadist;
+use App\Models\HadistNarrator;
+use App\Models\HadistSource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -136,5 +138,99 @@ class HadistController extends Controller
         }
 
         return view('hadist.categories');
+    }
+
+    public function sources(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            return DB::transaction(function () use ($request) {
+                $name = $request->name;
+                $author = $request->author;
+                $cover = optional($request->file('cover'))->store('/hadist/covers');
+
+                HadistSource::create([
+                    'name' => $name,
+                    'author' => $author,
+                    'cover' => $cover,
+                ]);
+
+                if ($request->wantsJson()) {
+                    return [
+                        'message' => 'Success',
+                    ];
+                }
+
+                return view('hadist.sources');
+            });
+        } else if ($request->isMethod('delete')) {
+            $category = $request->category;
+            if (! empty($category)) {
+                Hadist::where('category', $category)->delete();
+                return response()->json([
+                    'result' => 'success',
+                ]);
+            }
+            return response()->json([
+                'result' => 'fail',
+            ]);
+        }
+
+        if ($request->wantsJson()) {
+            $search = $request->q;
+
+            $model = HadistSource::select(['uuid', 'name', 'author']);
+            $model = $model->when($search, function ($query) use ($search) {
+                $query->where('name', 'like', '%'.$search.'%');
+                $query->orWhere('author', 'like', '%'.$search.'%');
+            });
+            return $model->cursorPaginate(100);
+        }
+
+        return view('hadist.sources');
+    }
+
+    public function narrators(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            return DB::transaction(function () use ($request) {
+                $name = $request->name;
+
+                $narrator = HadistNarrator::create([
+                    'name' => $name,
+                ]);
+                
+                if ($request->wantsJson()) {
+                    return [
+                        'id' => $narrator->uuid,
+                        'name' => $narrator->name,
+                    ];
+                }
+
+                return view('hadist.sources');
+            });
+        } else if ($request->isMethod('delete')) {
+            $category = $request->category;
+            if (! empty($category)) {
+                Hadist::where('category', $category)->delete();
+                return response()->json([
+                    'result' => 'success',
+                ]);
+            }
+            return response()->json([
+                'result' => 'fail',
+            ]);
+        }
+
+        if ($request->wantsJson()) {
+            $search = $request->q;
+
+            $model = HadistNarrator::select(['uuid', 'name']);
+            $model = $model->when($search, function ($query) use ($search) {
+                $query->where('name', 'like', '%'.$search.'%');
+            });
+            return $model->cursorPaginate(100);
+        }
+
+        return view('hadist.sources');
     }
 }

@@ -11,16 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('hadists', function (Blueprint $table) {
+        Schema::create('hadist_narrators', function (Blueprint $table) {
             $table->id();
-            $table->char('uuid', 36)->index();
-            $table->char('title');
-            $table->char('source');
-            $table->longText('text');
-            $table->longText('translation');
-            $table->char('category');
-            $table->longText('noted');
-            $table->longText('narrators');
+            $table->char('uuid', 36)->unique()->index();
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -30,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('hadists');
+        Schema::dropIfExists('hadist_narrators');
     }
 };
