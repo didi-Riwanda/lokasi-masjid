@@ -18,4 +18,9 @@ class MosqueeSchedule extends Model
         'end_time',
         'duration',
     ];
+
+    public function mosquee()
+    {
+        return $this->hasOne(Mosquee::class, 'id', 'mosquee_id');
+    }
 }

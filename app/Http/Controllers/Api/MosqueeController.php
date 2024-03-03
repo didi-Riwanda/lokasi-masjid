@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\MosqueeIndexRequest;
 use App\Http\Resources\MosqueeResource;
 use App\Models\Mosquee;
+use App\Models\MosqueeSchedule;
 use FaithFM\SmartSearch\SmartSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,8 +24,8 @@ class MosqueeController extends Controller
         ];
         $pattern = '/[a-zA-Z0-9 , .]/m';
         $coordinates = [
-            'lat' => $request->latitude,
-            'lng' => $request->longitude,
+            'lat' => $request->latitude ?? 0.510440,
+            'lng' => $request->longitude ?? 101.438309,
         ];
         $search = $request->q;
         $coditional = isset($search) && ! empty($search) && preg_match($pattern, $search);
@@ -68,8 +69,8 @@ class MosqueeController extends Controller
 
     public function show(Mosquee $mosquee, Request $request)
     {
-        $lat = $request->latitude ?? 0;
-        $lng = $request->longitude ?? 0;
+        $lat = $request->latitude ?? 0.510440;
+        $lng = $request->longitude ?? 101.438309;
         $distance = acos(
             cos(deg2rad($mosquee->latitude)) *
             cos(deg2rad($lat)) *
@@ -119,5 +120,65 @@ class MosqueeController extends Controller
                 ];
             }),
         ];
+    }
+
+    public function schedules(Request $request, ?Mosquee $mosquee = null)
+    {
+        $fields = [
+            'mosquee_id',
+            'title',
+            'speakers',
+            'type',
+            'duration',
+            'start_time',
+            'end_time',
+            'created_at',
+            'updated_at',
+        ];
+        $lat = $request->latitude ?? 0.510440;
+        $lng = $request->longitude ?? 101.438309;
+        $search = $request->q;
+        $coditional = isset($search) && ! empty($search) && preg_match('/[a-zA-Z0-9 , .]/m', $search);
+
+        $model = MosqueeSchedule::select($fields);
+        $model = $model->with([
+            'mosquee' => function ($query) use ($lat, $lng) {
+                $fields = [
+                    'id',
+                    'name',
+                    'address',
+                    'street',
+                    'district',
+                    'city',
+                    'province',
+                    'latitude',
+                    'longitude',
+                ];
+                if (! empty($lat) && ! empty($lng)) {
+                    $fields[] = DB::raw('
+                        ACOS(COS(RADIANS(`latitude`)) *
+                        COS(RADIANS('.$lat.')) *
+                        COS(RADIANS('.$lng.') - RADIANS(`longitude`)) +
+                        SIN(RADIANS(`latitude`)) *
+                        SIN(RADIANS('.$lat.'))) *
+                        6378137
+                        AS `distance`
+                    ');
+                }
+
+                $query->select($fields);
+                if (! empty($lat) && ! empty($lng)) {
+                    $query->orderBy('distance', 'asc');
+                }
+            },
+        ]);
+        $model = $model->when($coditional && strlen($search) < 250, function($model) use ($search) {
+            $search = new SmartSearch($search, 'title|speakers');
+            $model->where($search->getBuilderFilter());
+        });
+
+        // return MosqueeResource::make($model->cursorPaginate(100));
+
+        return $model->cursorPaginate(100);
     }
 }

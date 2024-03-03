@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\HadistController;
 use App\Http\Controllers\Api\MosqueeController;
 use App\Http\Controllers\Api\MurottalController;
 use App\Http\Controllers\Api\StudyController;
+use App\Models\Mosquee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,7 +28,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix('mosquee')->group(function () {
     Route::get('/', [MosqueeController::class, 'index']);
+    Route::get('/schedules', [MosqueeController::class, 'schedules']);
     Route::get('/{mosquee}', [MosqueeController::class, 'show']);
+    Route::get('/{mosquee}/schedules', [MosqueeController::class, 'schedules']);
 });
 Route::prefix('hadist')->group(function () {
     Route::get('/', [HadistController::class, 'index']);
