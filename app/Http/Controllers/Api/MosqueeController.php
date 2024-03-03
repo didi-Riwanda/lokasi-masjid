@@ -132,18 +132,30 @@ class MosqueeController extends Controller
             'duration',
             'start_time',
             'end_time',
-            'created_at',
-            'updated_at',
+            'mosquee_schedules.created_at',
+            'mosquee_schedules.updated_at',
         ];
         $lat = $request->latitude ?? 0.510440;
         $lng = $request->longitude ?? 101.438309;
         $search = $request->q;
         $coditional = isset($search) && ! empty($search) && preg_match('/[a-zA-Z0-9 , .]/m', $search);
 
+        if (! empty($lat) && ! empty($lng)) {
+            $fields[] = DB::raw('
+                ACOS(COS(RADIANS(`mosquees`.`latitude`)) *
+                COS(RADIANS('.$lat.')) *
+                COS(RADIANS('.$lng.') - RADIANS(`mosquees`.`longitude`)) +
+                SIN(RADIANS(`mosquees`.`latitude`)) *
+                SIN(RADIANS('.$lat.'))) *
+                6378137
+                AS `distance`
+            ');
+        }
+
         $model = MosqueeSchedule::select($fields);
         $model = $model->with([
-            'mosquee' => function ($query) use ($lat, $lng) {
-                $fields = [
+            'mosquee' => function ($query) {
+                $query->select([
                     'id',
                     'name',
                     'address',
@@ -153,30 +165,15 @@ class MosqueeController extends Controller
                     'province',
                     'latitude',
                     'longitude',
-                ];
-                if (! empty($lat) && ! empty($lng)) {
-                    $fields[] = DB::raw('
-                        ACOS(COS(RADIANS(`latitude`)) *
-                        COS(RADIANS('.$lat.')) *
-                        COS(RADIANS('.$lng.') - RADIANS(`longitude`)) +
-                        SIN(RADIANS(`latitude`)) *
-                        SIN(RADIANS('.$lat.'))) *
-                        6378137
-                        AS `distance`
-                    ');
-                }
-
-                $query->select($fields);
-                if (! empty($lat) && ! empty($lng)) {
-                    $query->orderBy('distance', 'asc');
-                }
+                ]);
             },
         ]);
         $model = $model->when($coditional && strlen($search) < 250, function($model) use ($search) {
             $search = new SmartSearch($search, 'title|speakers');
             $model->where($search->getBuilderFilter());
         });
-
+        $model = $model->join('mosquees', 'mosquees.id', '=', 'mosquee_schedules.mosquee_id');
+        $model = $model->orderBy('distance', 'asc');
         // return MosqueeResource::make($model->cursorPaginate(100));
 
         return $model->cursorPaginate(100);
