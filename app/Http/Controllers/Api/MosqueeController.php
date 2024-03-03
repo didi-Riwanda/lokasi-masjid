@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\MosqueeIndexRequest;
 use App\Http\Resources\MosqueeResource;
+use App\Http\Resources\MosqueeScheduleResource;
 use App\Models\Mosquee;
 use App\Models\MosqueeSchedule;
 use FaithFM\SmartSearch\SmartSearch;
@@ -125,6 +126,7 @@ class MosqueeController extends Controller
     public function schedules(Request $request, ?Mosquee $mosquee = null)
     {
         $fields = [
+            'mosquee_schedules.id',
             'mosquee_id',
             'title',
             'speakers',
@@ -174,8 +176,7 @@ class MosqueeController extends Controller
         });
         $model = $model->join('mosquees', 'mosquees.id', '=', 'mosquee_schedules.mosquee_id');
         $model = $model->orderBy('distance', 'asc');
-        // return MosqueeResource::make($model->cursorPaginate(100));
 
-        return $model->cursorPaginate(100);
+        return MosqueeScheduleResource::make($model->cursorPaginate(100));
     }
 }
