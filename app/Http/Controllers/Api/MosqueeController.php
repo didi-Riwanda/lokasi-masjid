@@ -160,6 +160,7 @@ class MosqueeController extends Controller
             'mosquee' => function ($query) {
                 $query->select([
                     'id',
+                    'uuid',
                     'name',
                     'address',
                     'street',

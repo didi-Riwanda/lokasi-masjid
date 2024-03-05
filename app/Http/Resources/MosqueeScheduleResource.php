@@ -17,7 +17,6 @@ class MosqueeScheduleResource extends ResourceCollection
         return [
             'data' => $this->collection->map(function ($row) {
                 return [
-                    'id' => $row->uuid,
                     'title' => $row->title,
                     'speakers' => $row->speakers,
                     'type' => $row->type,
@@ -26,9 +25,11 @@ class MosqueeScheduleResource extends ResourceCollection
                         'end' => $row->end_time,
                     ],
                     'day' => $row->day,
+                    'duration' => $row->duration,
                     'created' => $row->created_at,
                     'updated' => $row->updated_at,
                     'mosquee' => [
+                        'id' => $row->mosquee->uuid,
                         'name' => $row->mosquee->name,
                         'address' => $row->mosquee->address,
                         'street' => $row->mosquee->street,
