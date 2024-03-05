@@ -25,6 +25,7 @@ class MosqueeScheduleResource extends ResourceCollection
                         'start' => $row->start_time,
                         'end' => $row->end_time,
                     ],
+                    'day' => $row->day,
                     'created' => $row->created_at,
                     'updated' => $row->updated_at,
                     'mosquee' => [

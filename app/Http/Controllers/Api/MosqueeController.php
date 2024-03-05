@@ -132,6 +132,7 @@ class MosqueeController extends Controller
             'speakers',
             'type',
             'duration',
+            'day',
             'start_time',
             'end_time',
             'mosquee_schedules.created_at',
@@ -170,12 +171,42 @@ class MosqueeController extends Controller
                 ]);
             },
         ]);
+        // $model = $model->from(DB::raw('(select *, if(`type` = \'\') from `mosquee_schedules`) as `mosquee_schedules`'));
         $model = $model->when($coditional && strlen($search) < 250, function($model) use ($search) {
             $search = new SmartSearch($search, 'title|speakers');
             $model->where($search->getBuilderFilter());
         });
         $model = $model->join('mosquees', 'mosquees.id', '=', 'mosquee_schedules.mosquee_id');
+        $model = $model->when($request->start_time && $request->end_time, function ($query) {
+            $query->whereBetween();
+        });
+        $model = $model->when($request->time, function ($query) use ($request) {
+            $time = $request->time;
+            $days = [
+                'monday',
+                'tuesday',
+                'wednesday',
+                'thursday',
+                'friday',
+                'saturday',
+                'sunday',
+            ];
+            $target = $days[date('N', strtotime($time)) - 1];
+            $raw = DB::raw('
+                case
+                    when `type` = \'dauroh\' then
+                        (date_format(`start_time`, \'%Y-%m-%d\') = \''.$time.'\' || date_format(`end_time`, \'%Y-%m-%d\') = \''.$time.'\') && `day` = \''.$target.'\'
+                    else
+                        `day` = \''.$target.'\'
+                end
+            ');
+
+            $query->where($raw);
+            $query->orWhere('day', $target);
+        });
         $model = $model->orderBy('distance', 'asc');
+
+        // dd($model->toSql());
 
         return MosqueeScheduleResource::make($model->cursorPaginate(100));
     }
