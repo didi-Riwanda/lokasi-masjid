@@ -46,9 +46,11 @@
                                         $images = array_map(function ($row) {
                                             $filename = basename($row);
                                             return '<a href="'.route('image.url', ['path' => $row]).'" target="_blank">'.$filename.'</a>';
-                                        }, explode(',', $item['imgsrc']));
+                                        }, array_filter(explode(',', $item['imgsrc']), function ($row) {
+                                            return \Illuminate\Support\Facades\Storage::exists($row);
+                                        }));
                                     @endphp
-                                    {!! implode('<br />', $images) !!}
+                                    {!! count($images) > 0 ? implode('<br />', $images) : 'Gambar Tidak Ada' !!}
                                 </td>
                                 <td>{{ $item['category'] }}</td>
                                 <td>{{ empty($item['content']) ? 'Poster' : 'Artikel' }}</td>

@@ -17,6 +17,12 @@ class FilesystemBuildController extends Controller
             return response()->json(['message' => 'Document found']);
         }
 
+        // if ($request->scan && Storage::exists($path)) {
+        //     return response()->json([
+        //         ''
+        //     ]);
+        // }
+
         $file = Storage::get($path);
         $type = Storage::mimeType($path);
 

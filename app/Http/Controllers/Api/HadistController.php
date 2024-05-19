@@ -7,6 +7,7 @@ use App\Http\Requests\Api\HadistCategoryRequest;
 use App\Http\Requests\Api\HadistChapterRequest;
 use App\Http\Resources\HadistCategoryResource;
 use App\Http\Resources\HadistChapterResource;
+use App\Http\Resources\HadistResource;
 use App\Models\Hadist;
 use FaithFM\SmartSearch\SmartSearch;
 use Illuminate\Http\Request;
@@ -15,7 +16,27 @@ class HadistController extends Controller
 {
     public function index(Request $request)
     {
-        return Hadist::all();
+        $search = $request->get('q', $request->search);
+        $model = Hadist::select(
+            'id',
+            'uuid',
+            'title',
+            'source',
+            'category',
+            'noted',
+            'translation',
+            'narrators',
+            'created_at'
+        );
+        $model = $model->when(isset($search) && ! empty($search), function ($model) use ($search) {
+            $model->orwhere('title', 'like', '%'.$search.'%');
+            $model->orwhere('source', 'like', '%'.$search.'%');
+            $model->orwhere('category', 'like', '%'.$search.'%');
+            $model->orwhere('noted', 'like', '%'.$search.'%');
+            $model->orwhere('translation', 'like', '%'.$search.'%');
+            $model->orwhere('narrators', 'like', '%'.$search.'%');
+        });
+        return HadistResource::make($model->cursorPaginate(100));
     }
 
     public function categories(HadistCategoryRequest $request)

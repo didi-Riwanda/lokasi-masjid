@@ -34,6 +34,9 @@ class ArticleController extends Controller
             $model->where('category_id', $request->category);
         });
         $model = $model->latest();
+
+        sleep(8);
+
         return ArticleResource::make($model->cursorPaginate(20));
     }
 

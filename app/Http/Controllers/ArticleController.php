@@ -28,7 +28,7 @@ class ArticleController extends Controller
             'created_at',
         ]);
         $model = $model->when(! empty($request->search), function ($query) use ($request) {
-            $query->where('name', 'like', '%'.$request->search.'%');
+            $query->where('title', 'like', '%'.$request->search.'%');
         });
         $paginator = $model->cursorPaginate(15);
 

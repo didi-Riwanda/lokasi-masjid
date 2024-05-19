@@ -13,14 +13,20 @@ WORKDIR /var/www
 RUN sed -i "s/user = www-data/user = ${PHPUSER}/g" /usr/local/etc/php-fpm.d/www.conf
 RUN sed -i "s/group = www-data/group = ${PHPGROUP}/g" /usr/local/etc/php-fpm.d/www.conf
 
-RUN apk add build-base py-pip jpeg-dev zlib-dev libpng-dev libjpeg-turbo-dev libwebp-dev freetype-dev
+RUN apk add git curl wget openssl libzip-dev zlib-dev
+RUN apk add build-base py-pip jpeg-dev libpng-dev libjpeg-turbo-dev libwebp-dev freetype-dev
 RUN apk add jpegoptim optipng pngquant gifsicle
 RUN apk add autoconf gcc g++ make && pecl install redis && docker-php-ext-enable redis
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+RUN apk add ffmpeg libmcrypt-dev imagemagick-dev
+# RUN pecl install imagick
 RUN docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype
 RUN docker-php-ext-install gd
+# RUN docker-php-ext-enable imagick
+RUN docker-php-ext-install mysqli pdo pdo_mysql
+RUN docker-php-ext-install zip
 
-RUN apk add ffmpeg
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 COPY ./custom.ini /usr/local/etc/php/conf.d/custom.ini
 
